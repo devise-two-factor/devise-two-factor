@@ -1,8 +1,6 @@
-require 'attr_encryptor'
 require 'devise'
-require 'rotp'
-require 'devise/models'
-require 'devise/strategies'
+require 'devise_two_factor/models'
+require 'devise_two_factor/strategies'
 
 module Devise
   # Gives the length of generated OTP secrets

@@ -1,3 +1,6 @@
+require 'attr_encryptor'
+require 'rotp'
+
 module Devise
   module Models
     module TwoFactorAuthenticatable
