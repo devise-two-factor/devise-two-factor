@@ -8,7 +8,7 @@ module Devise
         if validate(resource) { resource.invalidate_otp_backup_code!(params[scope]['otp_attempt']) }
           # Devise fails to authenticate invalidated resources, but if we've
           # gotten here, the object changed (Since we deleted a recovery code)
-          resource.reload
+          resource.save!
           super
         end
 
@@ -21,3 +21,5 @@ module Devise
     end
   end
 end
+
+Warden::Strategies.add(:two_factor_backupable, Devise::Strategies::TwoFactorBackupable)

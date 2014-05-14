@@ -7,7 +7,7 @@ source 'http://rubygems.org'
 # Include everything needed to run rake, tests, features, etc.
 gem 'rails', '~> 3.2'
 gem 'activesupport', '~> 3.2'
-gem 'attr_encrypted'
+gem 'attr_encryptor'
 gem 'devise'
 gem 'rotp'
 

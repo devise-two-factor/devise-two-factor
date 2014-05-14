@@ -1,7 +1,8 @@
-require 'attr_encrypted'
+require 'attr_encryptor'
 require 'devise'
-require 'active_support/concern'
 require 'rotp'
+require 'devise/models'
+require 'devise/strategies'
 
 module Devise
   mattr_accessor :otp_secret_length
@@ -20,5 +21,8 @@ module Devise
   @@otp_number_of_backup_codes = 5
 end
 
-require 'devise/models/two_factor_authenticatable'
-require 'devise/models/two_factor_backupable'
+Devise.add_module(:two_factor_authenticatable, :route => :session, :strategy => true,
+                  :controller => :sessions, :model  => true)
+
+Devise.add_module(:two_factor_backupable, :route => :session, :strategy => true,
+                  :controller => :sessions, :model  => true)
