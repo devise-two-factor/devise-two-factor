@@ -38,6 +38,12 @@ This will register the model for the TwoFactorAuthenticatable strategy, and incl
 
 It is also recommended that, if present, you remove :database_authenticatable from the list of loaded Devise modules - loading both strategies will cause TwoFactorAuthenticatable to be run alongside DatabaseAuthenticatable, allowing users to bypass two-factor authentication.
 
+Note: If you're running Rails 3, you'll need to add the following to your model too:
+
+```ruby
+:attr_accessible :otp_attempt
+```
+
 Finally, you simply need to register the TwoFactorAuthenticatable strategy in your Devise initializer. You should edit your warden config block in config/initializers/devise.rb to resemble the following:
 
 ```ruby
