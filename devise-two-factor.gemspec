@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.licenses    = ["MIT"]
   s.summary     = "Barebones two-factor authentication with Devise"
-  s.email       = "shane@tinfoilsecurity.com"
+  s.email       = "engineers@tinfoilsecurity.com"
   s.homepage    = "https://github.com/tinfoil/devise-two-factor"
   s.description = "Barebones two-factor authentication with Devise"
   s.authors     = ['Shane Wilton']
