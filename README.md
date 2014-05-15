@@ -31,7 +31,7 @@ Next, you'll need to add the necessary Devise directives to your model. This req
 Once you've generated a key, and determined where it will be stored, add the following line to your model:
 
 ```ruby
-devise :two_factor_authenticatable, :otp_secret_encryption_key => <YOUR KEY HERE>
+devise :two_factor_authenticatable, :otp_secret_encryption_key => ENV[<YOUR ENVIRONMENT VARIABLE HERE>]
 ```
 
 This will register the model for the TwoFactorAuthenticatable strategy, and include the TwoFactorAuthenticatable mixin in the model.
