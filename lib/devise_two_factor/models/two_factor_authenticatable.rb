@@ -1,5 +1,5 @@
 require 'active_model'
-require 'attr_encryptor'
+require 'attr_encrypted'
 require 'rotp'
 
 module Devise

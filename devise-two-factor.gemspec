@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'activesupport'
   s.add_runtime_dependency 'activemodel'
-  s.add_runtime_dependency 'attr_encryptor'
+  s.add_runtime_dependency 'attr_encrypted'
   s.add_runtime_dependency 'devise'
   s.add_runtime_dependency 'rotp'
 

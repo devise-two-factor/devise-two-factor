@@ -7,6 +7,9 @@
   <div><%= f.label :password %><br />
     <%= f.password_field :password, autocomplete: "off" %></div>
 
+  <div><%= f.label :otp_attempt %><br />
+    <%= f.text_field :otp_attempt %> </div>
+
   <% if devise_mapping.rememberable? -%>
     <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
   <% end -%>
