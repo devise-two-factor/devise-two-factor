@@ -24,9 +24,9 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'devise'
   s.add_runtime_dependency 'rotp'
 
-  s.add_development_dependency 'bundler',   '~> 1.0'
+  s.add_development_dependency 'bundler',   '> 1.0'
   s.add_development_dependency 'rspec',     '~> 2.8'
-  s.add_development_dependency 'simplecov', '>= 0'
+  s.add_development_dependency 'simplecov'
   s.add_development_dependency 'faker'
   s.add_development_dependency 'timecop'
 end
