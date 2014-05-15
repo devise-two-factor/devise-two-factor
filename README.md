@@ -31,7 +31,7 @@ Next, you'll need to add the necessary Devise directives to your model. This req
 Once you've generated a key, and determined where it will be stored, add the following line to your model:
 
 ```ruby
-devise :two_factor_authenticatable, :otp_secret_encryption_key => ENV[<YOUR ENVIRONMENT VARIABLE HERE>]
+devise :two_factor_authenticatable, :otp_secret_encryption_key => ENV['YOUR_ENVIRONMENT_VARIABLE_HERE']
 ```
 
 This will register the model for the TwoFactorAuthenticatable strategy, and include the TwoFactorAuthenticatable mixin in the model.
@@ -41,7 +41,7 @@ It is also recommended that, if present, you remove :database_authenticatable fr
 Note: If you're running Rails 3, you'll need to add the following to your model too:
 
 ```ruby
-:attr_accessible :otp_attempt
+attr_accessible :otp_attempt
 ```
 
 Finally, you simply need to register the TwoFactorAuthenticatable strategy in your Devise initializer. You should edit your warden config block in config/initializers/devise.rb to resemble the following:
@@ -53,14 +53,14 @@ end
 ```
 
 ## Designing Your Workflow
-Devise-two-factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is importable to remember that the gem is extremely open-ended, and you should build a user-experience which fits your individual application.
+Devise-two-factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is importable to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
 
 There are two key workflows you'll have to think about:
 
 1. Logging in with two-factor authentication
 2. Enabling two-factor authentication for a given user
 
-We chose to keep things as simple as possible, and our implemention can be found by registering at [Tinfoil Security](https://tinfoilsecurity.com/), and enabling two-factor authentication from the account settings page.
+We chose to keep things as simple as possible, and our implemention can be found by registering at [Tinfoil Security](https://tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
 
 
 ### Logging In
@@ -94,15 +94,15 @@ However you decide to handle enrollment, there are a few important consideration
 It sounds like a lot of work, but most of these problems have been very elegantly solved by other people. We recommend taking a look at the excellent workflows used by Heroku and Google for inspiration.
 
 ## Backup Codes
-Devise-two-factor is designed with extensibility in mind. An example extension, TwoFactorBackupable, is included. This plugin allows you to add the ability to generate single-use backup codes for a user, which they may use to bypass two-factor authentication, in the event that they lose access to their device.
+Devise-two-factor is designed with extensibility in mind. One such extension, TwoFactorBackupable, is included and serves as a good example of how to extend this gem. This plugin allows you to add the ability to generate single-use backup codes for a user, which they may use to bypass two-factor authentication, in the event that they lose access to their device.
 
-Again, you'll need a migration to support backup-codes. If you're using Rails 4.0, call the following generator, otherwise skip to the next section for manual setup:
+Again, you'll need a migration to support backup codes. If you're using Rails 4.0, call the following generator, otherwise skip to the next section for manual setup:
 
 ```ruby
 rails generate devise-two-factor:backupable MODEL
 ```
 
-You'll also need to add the follwing Devise directive to your model:
+You'll also need to add the following Devise directive to your model:
 
 ```ruby
 devise :two_factor_backupable
@@ -114,27 +114,27 @@ Finally, you'l need to enable the TwoFactorBackupable strategy in your Devise in
 manager.default_strategies(:scope => :user).unshift :two_factor_backupable
 ```
 
-You can then generate backup-codes for a user:
+You can then generate backup codes for a user:
 
 ```ruby
 codes = current_user.generate_otp_backup_codes!
 current_user.save!
-<Display codes to the user somehow>
+# Display codes to the user somehow!
 ```
 
-The backup-codes are stored in the database as bcrypt hashes, so be sure to display them to the user at this point. If all went well, the user should be able to login using each of the generated codes in place of their two-factor token. Each code is single-use, and generating a new set of backup-codes for that user will invalidate the old ones.
+The backup codes are stored in the database as bcrypt hashes, so be sure to display them to the user at this point. If all went well, the user should be able to login using each of the generated codes in place of their two-factor token. Each code is single-use, and generating a new set of backup codes for that user will invalidate all of the old ones.
 
-You can customize the length of each code, and the number of codes generated by passing the options into :two_factor_backupable in the Devise directive:
+You can customize the length of each code, and the number of codes generated by passing the options into `:two_factor_backupable` in the Devise directive:
 
 ```ruby
-devise :two_factor_backupable, otp_backup_code_length: 32,
+devise :two_factor_backupable, otp_backup_code_length:     32,
                                otp_number_of_backup_codes: 10
 ```
 
 ### Help! I'm not using Rails 4.0!
-Don't worry! TwoFactorBackupable stores the backup-codes as an array of strings in the database. In Rails 4.0 this is supported natively, but in earlier versions you can use a gem to emulator this behaviour: we recommend [activerecord-postgres-array](https://github.com/tlconnor/activerecord-postgres-array).
+Don't worry! TwoFactorBackupable stores the backup codes as an array of strings in the database. In Rails 4.0 this is supported natively, but in earlier versions you can use a gem to emulate this behaviour: we recommend [activerecord-postgres-array](https://github.com/tlconnor/activerecord-postgres-array).
 
-You'll then simply have to create a migration to add an array named otp_backup_codes to your model. If you use the above gem, this migration might look like:
+You'll then simply have to create a migration to add an array named `otp_backup_codes` to your model. If you use the above gem, this migration might look like:
 
 ```ruby
 class AddTwoFactorBackupCodesToUsers < ActiveRecord::Migration
@@ -147,7 +147,7 @@ end
 Now just continue with the setup in the previous section, skipping the generator step.
 
 ## Testing
-Devise-two-factor includes shared-examples for both TwoFactorAuthenticatable and TwoFactorBackupable. Adding the following two lines to the specs for your two-factor enabled models will allow you to test your models against two-factor functionality:
+Devise-two-factor includes shared-examples for both TwoFactorAuthenticatable and TwoFactorBackupable. Adding the following two lines to the specs for your two-factor enabled models will allow you to test your models for two-factor functionality:
 
 ```ruby
 it_behaves_like "two_factor_authenticatable"
