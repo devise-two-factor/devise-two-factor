@@ -1,3 +1,5 @@
+require 'active_model'
+
 module Devise
   module Models
     # TwoFactorBackupable allows a user to generate backup codes which

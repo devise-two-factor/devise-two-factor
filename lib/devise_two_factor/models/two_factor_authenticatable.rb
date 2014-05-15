@@ -1,3 +1,4 @@
+require 'active_model'
 require 'attr_encryptor'
 require 'rotp'
 
@@ -11,7 +12,6 @@ module Devise
         attr_encrypted :otp_secret, :key => self.otp_secret_encryption_key
 
         attr_accessor :otp_attempt
-        attr_accessible :otp_attempt
       end
 
       def self.required_fields(klass)

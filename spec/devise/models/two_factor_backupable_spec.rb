@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 class TwoFactorBackupableDouble
-  include ::ActiveModel::MassAssignmentSecurity
   include ::ActiveModel::Validations::Callbacks
   extend  ::Devise::Models
 
