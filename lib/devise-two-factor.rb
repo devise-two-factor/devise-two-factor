@@ -3,7 +3,7 @@ require 'devise_two_factor/models'
 require 'devise_two_factor/strategies'
 
 module Devise
-  # Gives the length of generated OTP secrets
+  # The length of generated OTP secrets
   mattr_accessor :otp_secret_length
   @@otp_secret_length = 128
 
