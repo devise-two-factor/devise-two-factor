@@ -32,7 +32,7 @@ module DeviseTwoFactor
         config_path = File.join('config', 'initializers', 'devise.rb')
 
         content = "  config.warden do |manager|\n" \
-                  "    manager.default_strategies(:scope => :user).unshift :two_factor_authenticatable\n" \
+                  "    manager.default_strategies(:scope => :#{singular_table_name}).unshift :two_factor_authenticatable\n" \
                   "  end\n\n"
 
         inject_into_file(config_path, content, after: "Devise.setup do |config|\n")
@@ -50,7 +50,7 @@ module DeviseTwoFactor
         indent_depth = class_path.size
 
         content = [
-                    "devise :two_factor_authenticatable",
+                    "devise :two_factor_authenticatable,",
                     "       :otp_secret_encryption_key => ENV['#{encryption_key_env}']\n"
                   ]
 
@@ -73,10 +73,6 @@ module DeviseTwoFactor
 
       def strong_parameters_enabled?
         defined?(ActionController::StrongParameters)
-      end
-
-      def postgresql?
-        ActiveRecord::Base.connection.adapter_name.downcase == "postgresql"
       end
     end
   end
