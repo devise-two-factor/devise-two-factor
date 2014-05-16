@@ -1,5 +1,5 @@
 require 'active_model'
-require 'attr_encryptor'
+require 'attr_encrypted'
 require 'rotp'
 
 module Devise
@@ -9,7 +9,8 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        attr_encrypted :otp_secret, :key => self.otp_secret_encryption_key
+        attr_encrypted :otp_secret, :key  => self.otp_secret_encryption_key,
+                                    :mode => :per_attribute_iv_and_salt
 
         attr_accessor :otp_attempt
       end

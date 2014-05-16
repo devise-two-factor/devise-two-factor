@@ -15,6 +15,18 @@ shared_examples 'two_factor_authenticatable' do
     it 'should be of the configured length' do
       subject.otp_secret.length.should eq(subject.class.otp_secret_length)
     end
+
+    it 'stores the encrypted otp_secret' do
+      subject.encrypted_otp_secret.should_not be_nil
+    end
+
+    it 'stores an iv for otp_secret' do
+      subject.encrypted_otp_secret_iv.should_not be_nil
+    end
+
+    it 'stores a salt for otp_secret' do
+      subject.encrypted_otp_secret_salt.should_not be_nil
+    end
   end
 
   describe '#valid_otp?' do

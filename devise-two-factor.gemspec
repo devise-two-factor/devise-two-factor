@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'devise-two-factor'
 
-  s.files         = `git ls-files`.split("\n")
+  s.files         = `git ls-files`.split("\n").delete_if { |x| x.match('demo/*') }
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']
 
   s.add_runtime_dependency 'activesupport'
   s.add_runtime_dependency 'activemodel'
-  s.add_runtime_dependency 'attr_encryptor'
+  s.add_runtime_dependency 'attr_encrypted'
   s.add_runtime_dependency 'devise'
   s.add_runtime_dependency 'rotp'
 
