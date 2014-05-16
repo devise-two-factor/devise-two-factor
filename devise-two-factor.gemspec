@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'devise-two-factor'
 
-  s.files         = `git ls-files`.split("\n")
+  s.files         = `git ls-files`.split("\n").delete_if { |x| x.match('demo/*') }
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']
 
