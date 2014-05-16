@@ -9,7 +9,7 @@ Devise-two-factor is a minimalist extension to Devise which offers support for t
 * Is extensible, and includes two-factor backup codes as an example of how plugins can be structured
 
 ## Example App
-An example Rails 4 application is provided in devise_two_factor_demo/
+An example Rails 4 application is provided in demo/
 
 It showcases a minimal example of devise-two-factor in action, and can act as a reference for integrating the gem into your own application.
 
