@@ -1,4 +1,8 @@
 Devise.setup do |config|
+  config.warden do |manager|
+    manager.default_strategies(:scope => :user).unshift :two_factor_authenticatable
+  end
+
   config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
 
   require 'devise/orm/active_record'
@@ -11,9 +15,4 @@ Devise.setup do |config|
   config.password_length = 8..128
   config.reset_password_within = 6.hours
   config.sign_out_via = :delete
-
-  config.warden do |manager|
-    manager.default_strategies(:scope => :user).unshift :two_factor_authenticatable
-    manager.default_strategies(:scope => :user).unshift :two_factor_backupable
-  end
 end
