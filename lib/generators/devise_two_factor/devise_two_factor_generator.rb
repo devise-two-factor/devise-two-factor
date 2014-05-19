@@ -64,15 +64,15 @@ module DeviseTwoFactor
       end
 
       def needs_attr_accessible?
-        rails_3? && !strong_parameters_enabled?
-      end
-
-      def rails_3?
-        Rails::VERSION::MAJOR == 3
+        !strong_parameters_enabled? && mass_assignment_security_enabled?
       end
 
       def strong_parameters_enabled?
         defined?(ActionController::StrongParameters)
+      end
+
+      def mass_assignment_security_enabled?
+        defined?(ActiveModel::MassAssignmentSecurity)
       end
     end
   end
