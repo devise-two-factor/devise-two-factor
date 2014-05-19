@@ -25,8 +25,12 @@ module Devise
         otp_secret = options[:otp_secret] || self.otp_secret
         return false unless otp_secret.present?
 
-        totp = ROTP::TOTP.new(otp_secret)
+        totp = self.otp(otp_secret)
         totp.verify_with_drift(code, self.class.otp_allowed_drift)
+      end
+
+      def otp(otp_secret = self.otp_secret)
+        ROTP::TOTP.new(otp_secret).at(Time.now)
       end
 
       def otp_provisioning_uri(account, options = {})
