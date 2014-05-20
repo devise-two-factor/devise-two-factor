@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']
 
+  s.add_runtime_dependency 'rails' # For generators
   s.add_runtime_dependency 'activesupport'
   s.add_runtime_dependency 'activemodel'
   s.add_runtime_dependency 'attr_encrypted'

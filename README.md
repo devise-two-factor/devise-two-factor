@@ -19,11 +19,15 @@ Devise-two-factor doesn't require much to get started, but there are a few prere
 
 First, you'll need a Rails application setup with Devise. Visit the Devise [homepage](https://github.com/plataformatec/devise) for instructions.
 
-You can then generate the necessary migrations for a given model by simply running:
+Next, since devise-two-factor encrypts its secrets before storing them in the database, you'll need to generate an encryption key, and store it in an environment variable of your choice.
+
+Finally, you can automate all of the required setup by simply running:
 
 ```ruby
-rails generate devise-two-factor:authenticatable MODEL
+rails generate devise_two_factor MODEL ENVIRONMENT_VARIABLE
 ```
+
+Where MODEL is the name of the model you wish to add two-factor functionality to, and ENVIRONMENT_VARIABLE is the name of the variable you're storing your encryption key in.
 
 This generator will add a few columns to the specified model:
 
@@ -32,31 +36,11 @@ This generator will add a few columns to the specified model:
 * encrypted_otp_secret_salt
 * otp_required_for_login
 
-Next, you'll need to add the necessary Devise directives to your model. This requires that you choose an encryption key to be used when storing two-factor authentication secrets in your database. We recommend that this key be stored as an environment variable, and that it not be checked into source control.
+It also adds the :two_factor_authenticatable directive to your model, and sets up your encryption key. If present, it will remove :database_authenticatable from the model, as the two strategies are incompatible. Lastly, the generator will add a Warden config block to your Devise initializer, which enables the strategies required for two-factor authenticatation.
 
-Once you've generated a key, and determined where it will be stored, add the following line to your model:
+If you're running Rails 3, or do not have strong parameters enabled, the generator will also setup the required mass-assignment security options in your model.
 
-```ruby
-devise :two_factor_authenticatable, :otp_secret_encryption_key => ENV['YOUR_ENVIRONMENT_VARIABLE_HERE']
-```
-
-This will register the model for the TwoFactorAuthenticatable strategy, and include the TwoFactorAuthenticatable mixin in the model.
-
-It is also recommended that, if present, you remove :database_authenticatable from the list of loaded Devise modules - loading both strategies will cause TwoFactorAuthenticatable to be run alongside DatabaseAuthenticatable, allowing users to bypass two-factor authentication.
-
-Note: If you're running Rails 3, you'll need to add the following to your model too:
-
-```ruby
-attr_accessible :otp_attempt
-```
-
-Finally, you simply need to register the TwoFactorAuthenticatable strategy in your Devise initializer. You should edit your warden config block in config/initializers/devise.rb to resemble the following:
-
-```ruby
-config.warden do |manager|
-  manager.default_strategies(:scope => :user).unshift :two_factor_authenticatable
-end
-```
+**After running the generator, verify that :database_authenticatable is not being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. Loading both :database_authenticatable and :two_factor_authenticatable in a model will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies.**
 
 ## Designing Your Workflow
 Devise-two-factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is importable to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
@@ -102,22 +86,26 @@ It sounds like a lot of work, but most of these problems have been very elegantl
 ## Backup Codes
 Devise-two-factor is designed with extensibility in mind. One such extension, TwoFactorBackupable, is included and serves as a good example of how to extend this gem. This plugin allows you to add the ability to generate single-use backup codes for a user, which they may use to bypass two-factor authentication, in the event that they lose access to their device.
 
-Again, you'll need a migration to support backup codes. If you're using Rails 4.0, call the following generator, otherwise skip to the next section for manual setup:
-
-```ruby
-rails generate devise-two-factor:backupable MODEL
-```
-
-You'll also need to add the following Devise directive to your model:
+To install it, you need to add the :two_factor_backupable directive to your model.
 
 ```ruby
 devise :two_factor_backupable
 ```
 
-Finally, you'l need to enable the TwoFactorBackupable strategy in your Devise initializer:
+You'll also be required to enable the :two_factor_backupable strategy, by adding the following line to your Warden config in your Devise initializer, substituting :user for the name of your Devise scope.
 
 ```ruby
 manager.default_strategies(:scope => :user).unshift :two_factor_backupable
+```
+
+The final installation step is dependent on your version of Rails. If you're not running Rails 4, skip to the next section. Otherwise, create the following migration:
+
+```ruby
+class AddDeviseTwoFactorBackupableToUsers < ActiveRecord::Migration
+  def change
+    add_column :users, :otp_backup_codes, :string, array: true
+  end
+end
 ```
 
 You can then generate backup codes for a user:
