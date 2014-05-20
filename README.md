@@ -1,6 +1,8 @@
 # Devise-Two-Factor Authentication
 By [Tinfoil Security](http://tinfoilsecurity.com/)
 
+[![Build Status](https://travis-ci.org/tinfoil/devise-two-factor.svg?branch=master)](https://travis-ci.org/tinfoil/devise-two-factor)
+
 Devise-two-factor is a minimalist extension to Devise which offers support for two-factor authentication. It:
 
 * Allows you to incorporate two-factor authentication into your existing models
