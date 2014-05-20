@@ -30,7 +30,11 @@ module Devise
       end
 
       def otp(otp_secret = self.otp_secret)
-        ROTP::TOTP.new(otp_secret).at(Time.now)
+        ROTP::TOTP.new(otp_secret)
+      end
+
+      def current_otp
+        otp.at(Time.now)
       end
 
       def otp_provisioning_uri(account, options = {})
