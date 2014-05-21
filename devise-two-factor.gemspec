@@ -12,6 +12,12 @@ Gem::Specification.new do |s|
   s.description = 'Barebones two-factor authentication with Devise'
   s.authors     = ['Shane Wilton']
 
+  s.cert_chain  = [
+                    'certs/tinfoil-cacert.pem',
+                    'certs/tinfoilsecurity-gems-cert.pem'
+                  ]
+  s.signing_key = File.expand_path("~/.ssh/tinfoilsecurity-gems-key.pem") if $0 =~ /gem\z/
+
   s.rubyforge_project = 'devise-two-factor'
 
   s.files         = `git ls-files`.split("\n").delete_if { |x| x.match('demo/*') }
