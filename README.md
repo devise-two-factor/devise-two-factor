@@ -146,7 +146,7 @@ Now just continue with the setup in the previous section, skipping the generator
 Devise-two-factor includes shared-examples for both TwoFactorAuthenticatable and TwoFactorBackupable. Adding the following two lines to the specs for your two-factor enabled models will allow you to test your models for two-factor functionality:
 
 ```ruby
-require 'devise_two_factor/spec_helpers
+require 'devise_two_factor/spec_helpers'
 
 it_behaves_like "two_factor_authenticatable"
 it_behaves_like "two_factor_backupable"
