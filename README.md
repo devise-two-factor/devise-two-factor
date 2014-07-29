@@ -52,7 +52,7 @@ There are two key workflows you'll have to think about:
 1. Logging in with two-factor authentication
 2. Enabling two-factor authentication for a given user
 
-We chose to keep things as simple as possible, and our implemention can be found by registering at [Tinfoil Security](https://tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
+We chose to keep things as simple as possible, and our implementation can be found by registering at [Tinfoil Security](https://tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
 
 
 ### Logging In
