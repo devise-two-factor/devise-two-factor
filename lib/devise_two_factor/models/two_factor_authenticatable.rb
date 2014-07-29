@@ -10,7 +10,7 @@ module Devise
 
       included do
         attr_encrypted :otp_secret, :key  => self.otp_secret_encryption_key,
-                                    :mode => :per_attribute_iv_and_salt
+                                    :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
 
         attr_accessor :otp_attempt
       end
