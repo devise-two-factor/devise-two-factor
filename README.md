@@ -73,9 +73,19 @@ current_user.otp_secret = User.generate_otp_secret
 current_user.save!
 ```
 
+Then to generate a one-time password you can use the following:
+
 Before you can do this however, you need to decide how you're going to transmit two-factor tokens to a user. Common strategies include sending an SMS, or using a mobile application such as Google Authenticator.
 
 At Tinfoil Security, we opted to use the excellent [rqrcode-rails3](https://github.com/samvincent/rqrcode-rails3) gem to generate a QR-code representing the user's secret key, which can then be scanned by any mobile two-factor authentication client.
+
+If you instead to decide to send the one-time password to the user directly, such as via SMS, you'll need a mechanism for generating the one-time password on the server:
+
+```ruby
+current_user.current_otp
+```
+
+The generated code will be valid for the duration specified by otp_allowed_drift.
 
 However you decide to handle enrollment, there are a few important considerations to be made:
 
