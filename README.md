@@ -3,7 +3,7 @@ By [Tinfoil Security](http://tinfoilsecurity.com/)
 
 [![Build Status](https://travis-ci.org/tinfoil/devise-two-factor.svg?branch=master)](https://travis-ci.org/tinfoil/devise-two-factor)
 
-Devise-two-factor is a minimalist extension to Devise which offers support for two-factor authentication. It:
+Devise-two-factor is a minimalist extension to Devise which offers support for two-factor authentication, through the [TOTP](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm) scheme. It:
 
 * Allows you to incorporate two-factor authentication into your existing models
 * Is opinionated about security, so you don't have to be
@@ -45,14 +45,14 @@ If you're running Rails 3, or do not have strong parameters enabled, the generat
 **After running the generator, verify that :database_authenticatable is not being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. Loading both :database_authenticatable and :two_factor_authenticatable in a model will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies.**
 
 ## Designing Your Workflow
-Devise-two-factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is importable to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
+Devise-two-factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is important to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
 
 There are two key workflows you'll have to think about:
 
 1. Logging in with two-factor authentication
 2. Enabling two-factor authentication for a given user
 
-We chose to keep things as simple as possible, and our implemention can be found by registering at [Tinfoil Security](https://tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
+We chose to keep things as simple as possible, and our implementation can be found by registering at [Tinfoil Security](https://tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
 
 
 ### Logging In
@@ -73,9 +73,19 @@ current_user.otp_secret = User.generate_otp_secret
 current_user.save!
 ```
 
+Then to generate a one-time password you can use the following:
+
 Before you can do this however, you need to decide how you're going to transmit two-factor tokens to a user. Common strategies include sending an SMS, or using a mobile application such as Google Authenticator.
 
 At Tinfoil Security, we opted to use the excellent [rqrcode-rails3](https://github.com/samvincent/rqrcode-rails3) gem to generate a QR-code representing the user's secret key, which can then be scanned by any mobile two-factor authentication client.
+
+If you instead to decide to send the one-time password to the user directly, such as via SMS, you'll need a mechanism for generating the one-time password on the server:
+
+```ruby
+current_user.current_otp
+```
+
+The generated code will be valid for the duration specified by otp_allowed_drift.
 
 However you decide to handle enrollment, there are a few important considerations to be made:
 
@@ -146,7 +156,7 @@ Now just continue with the setup in the previous section, skipping the generator
 Devise-two-factor includes shared-examples for both TwoFactorAuthenticatable and TwoFactorBackupable. Adding the following two lines to the specs for your two-factor enabled models will allow you to test your models for two-factor functionality:
 
 ```ruby
-require 'devise_two_factor/spec_helpers
+require 'devise_two_factor/spec_helpers'
 
 it_behaves_like "two_factor_authenticatable"
 it_behaves_like "two_factor_backupable"
