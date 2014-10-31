@@ -27,12 +27,12 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'rails' # For generators
   s.add_runtime_dependency 'activesupport'
   s.add_runtime_dependency 'activemodel'
-  s.add_runtime_dependency 'attr_encrypted'
-  s.add_runtime_dependency 'devise'
-  s.add_runtime_dependency 'rotp'
+  s.add_runtime_dependency 'attr_encrypted', '~> 1.3.2'
+  s.add_runtime_dependency 'devise',         '~> 3.2.4'
+  s.add_runtime_dependency 'rotp',           '~> 1.6.1'
 
-  s.add_development_dependency 'bundler',   '> 1.0'
-  s.add_development_dependency 'rspec',     '~> 2.8'
+  s.add_development_dependency 'bundler',    '> 1.0'
+  s.add_development_dependency 'rspec',      '~> 2.8'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'faker'
   s.add_development_dependency 'timecop'
