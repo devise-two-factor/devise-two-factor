@@ -41,22 +41,22 @@ shared_examples 'two_factor_authenticatable' do
 
     it 'validates a precisely correct OTP' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now)
-      subject.valid_otp?(otp).should be_true
+      subject.valid_otp?(otp).should be true
     end
 
     it 'validates an OTP within the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true)
-      subject.valid_otp?(otp).should be_true
+      subject.valid_otp?(otp).should be true
     end
 
     it 'does not validate an OTP above the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift * 2, true)
-      subject.valid_otp?(otp).should be_false
+      subject.valid_otp?(otp).should be false
     end
 
     it 'does not validate an OTP below the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now - subject.class.otp_allowed_drift * 2, true)
-      subject.valid_otp?(otp).should be_false
+      subject.valid_otp?(otp).should be false
     end
   end
 

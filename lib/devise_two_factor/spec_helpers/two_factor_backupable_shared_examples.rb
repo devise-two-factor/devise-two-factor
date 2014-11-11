@@ -56,14 +56,14 @@ shared_examples 'two_factor_backupable' do
 
     context 'given an invalid recovery code' do
       it 'returns false' do
-        subject.invalidate_otp_backup_code!('password').should be_false
+        subject.invalidate_otp_backup_code!('password').should be false
       end
     end
 
     context 'given a valid recovery code' do
       it 'returns true' do
         @plaintext_codes.each do |code|
-          subject.invalidate_otp_backup_code!(code).should be_true
+          subject.invalidate_otp_backup_code!(code).should be true
         end
       end
 
@@ -71,7 +71,7 @@ shared_examples 'two_factor_backupable' do
         code = @plaintext_codes.sample
 
         subject.invalidate_otp_backup_code!(code)
-        subject.invalidate_otp_backup_code!(code).should be_false
+        subject.invalidate_otp_backup_code!(code).should be false
       end
 
       it 'does not invalidate the other recovery codes' do
@@ -81,7 +81,7 @@ shared_examples 'two_factor_backupable' do
         @plaintext_codes.delete(code)
 
         @plaintext_codes.each do |code|
-          subject.invalidate_otp_backup_code!(code).should be_true
+          subject.invalidate_otp_backup_code!(code).should be true
         end
       end
     end
