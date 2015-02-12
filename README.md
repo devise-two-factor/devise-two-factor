@@ -64,6 +64,53 @@ Logging in with two-factor authentication works extremely similarly to regular d
 
 These parameters can be submitted to the standard Devise login route, and the strategy will handle the authentication of the user for you.
 
+### Disabling Automatic Login After Password Resets
+If you use the Devise ```recoverable``` strategy, the default behavior after a password reset is to automatically authenticate the user and log them in. This is obviously a problem if a user has two-factor authentication enabled, as resetting the password would get around the 2FA requirement.
+
+Because of this, you need to override the controller and disable the automatic login on your own. If you don't use the ```recoverable``` strategy and don't provide the option of password resets, you don't need to worry about this. An example is as follows:
+
+```ruby
+# app/controllers/passwords_controller.rb
+class PasswordsController < Devise::PasswordsController
+  # Overrides to require a user to log in after resetting the password
+
+  def update
+    self.resource = resource_class.reset_password_by_token(resource_params)
+    yield resource if block_given?
+
+    if resource.errors.empty?
+      resource.unlock_access! if unlockable?(resource)
+      flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
+      set_flash_message(:notice, flash_message) if is_flashing_format?
+
+      # Do not automatically login if two-factor is enabled for this user.
+      # Remove the following three lines entirely if you want to disable
+      # automatic login for all users regardless, after a password reset.
+      unless resource.try(:otp_required_for_login?)
+        sign_in(resource_name, resource)
+      end
+
+      respond_with resource, location: after_resetting_password_path_for(resource)
+    else
+      respond_with resource
+    end
+  end
+
+  protected
+
+  def after_resetting_password_path_for(resource)
+    new_session_path(resource)
+  end
+end
+```
+
+And then tell Devise to use your new controller instead of the default:
+
+```ruby
+# app/config/routes.rb
+devise_for :users, :controllers => {:passwords => "passwords"}
+```
+
 ### Enabling Two-Factor Authentication
 Enabling two-factor authentication for a user is easy. For example, if my user model were named User, I could do the following:
 
