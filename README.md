@@ -21,7 +21,13 @@ Devise-two-factor doesn't require much to get started, but there are a few prere
 
 First, you'll need a Rails application setup with Devise. Visit the Devise [homepage](https://github.com/plataformatec/devise) for instructions.
 
-Next, since devise-two-factor encrypts its secrets before storing them in the database, you'll need to generate an encryption key, and store it in an environment variable of your choice.
+Next, since devise-two-factor encrypts its secrets before storing them in the database, you'll need to generate an encryption key, and store it in an environment variable of your choice. Set the encryption key in the model that uses devise: 
+
+```
+  devise :two_factor_authenticatable,
+         :otp_secret_encryption_key => ENV['YOUR_ENCRYPTION_KEY_HERE']
+
+```
 
 Finally, you can automate all of the required setup by simply running:
 
