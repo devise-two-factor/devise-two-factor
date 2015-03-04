@@ -11,10 +11,9 @@ Devise-two-factor is a minimalist extension to Devise which offers support for t
 * Is extensible, and includes two-factor backup codes as an example of how plugins can be structured
 
 ## Example App
-An example Rails 4 application is provided in demo/
+An example Rails 4 application is provided in demo/. It showcases a minimal example of devise-two-factor in action, and can act as a reference for integrating the gem into your own application.
 
-It showcases a minimal example of devise-two-factor in action, and can act as a reference for integrating the gem into your own application.
-
+For the demo app to work, create an encryption key and store it as an environment variable. One way to do this is to create a file named `local_env.yml` in the application root. Set the value of 'ENCRYPTION_KEY' in the YML file. That value will be loaded into the application environment by `application.rb`.
 
 ## Getting Started
 Devise-two-factor doesn't require much to get started, but there are a few prerequisites before you can start using it in your application.
