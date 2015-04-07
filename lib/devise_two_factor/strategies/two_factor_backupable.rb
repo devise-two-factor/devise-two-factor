@@ -1,11 +1,16 @@
 module Devise
   module Strategies
     class TwoFactorBackupable < Devise::Strategies::DatabaseAuthenticatable
+      def valid?
+        resource.otp_required_for_login
+      end
 
       def authenticate!
         resource = mapping.to.find_for_database_authentication(authentication_hash)
 
-        if validate(resource) { resource.invalidate_otp_backup_code!(params[scope]['otp_attempt']) }
+        if validate(resource) { params[scope]                &&
+                                params[scope]['otp_attempt'] &&
+                                resource.invalidate_otp_backup_code!(params[scope]['otp_attempt']) }
           # Devise fails to authenticate invalidated resources, but if we've
           # gotten here, the object changed (Since we deleted a recovery code)
           resource.save!

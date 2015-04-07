@@ -1,6 +1,9 @@
 module Devise
   module Strategies
     class TwoFactorAuthenticatable < Devise::Strategies::DatabaseAuthenticatable
+      def valid?
+        resource.otp_required_for_login
+      end
 
       def authenticate!
         resource = mapping.to.find_for_database_authentication(authentication_hash)
@@ -8,7 +11,8 @@ module Devise
         # 1. The password and the OTP are correct
         # 2. The password is correct, and OTP is not required for login
         # We check the OTP, then defer to DatabaseAuthenticatable
-        if validate(resource) { !resource.otp_required_for_login ||
+        if validate(resource) { params[scope]                &&
+                                params[scope]['otp_attempt'] &&
                                 resource.valid_otp?(params[scope]['otp_attempt']) }
           super
         end
