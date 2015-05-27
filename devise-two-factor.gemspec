@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'activemodel'
   s.add_runtime_dependency 'attr_encrypted', '~> 1.3.2'
   s.add_runtime_dependency 'devise',         '~> 3.2.4'
-  s.add_runtime_dependency 'rotp',           '~> 1.6.1'
+  s.add_runtime_dependency 'rotp',           '< 2'
 
   s.add_development_dependency 'bundler',    '> 1.0'
   s.add_development_dependency 'rspec',      '> 2', '< 3'
