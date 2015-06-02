@@ -91,7 +91,7 @@ class PasswordsController < Devise::PasswordsController
       # Do not automatically login if two-factor is enabled for this user.
       # Remove the following three lines entirely if you want to disable
       # automatic login for all users regardless, after a password reset.
-      unless resource.try(:otp_required_for_login?)
+      unless resource.respond_to?(:otp_required_for_login?) && resource.otp_required_for_login?
         sign_in(resource_name, resource)
       end
 
