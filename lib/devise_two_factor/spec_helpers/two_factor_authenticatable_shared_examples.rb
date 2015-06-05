@@ -70,7 +70,7 @@ shared_examples 'two_factor_authenticatable' do
     end
 
     it 'should return uri with issuer option' do
-      subject.otp_provisioning_uri(account, issuer: issuer).should match(%r{otpauth://totp/#{account}\?issuer=#{issuer}&secret=\w{#{otp_secret_length}}$})
+      subject.otp_provisioning_uri(account, issuer: issuer).should match(%r{otpauth://totp/#{account}\?secret=\w{#{otp_secret_length}}&issuer=#{issuer}$})
     end
   end
 end
