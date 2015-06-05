@@ -20,7 +20,7 @@ Devise-two-factor doesn't require much to get started, but there are a few prere
 
 First, you'll need a Rails application setup with Devise. Visit the Devise [homepage](https://github.com/plataformatec/devise) for instructions.
 
-Next, since devise-two-factor encrypts its secrets before storing them in the database, you'll need to generate an encryption key, and store it in an environment variable of your choice. Set the encryption key in the model that uses devise: 
+Next, since devise-two-factor encrypts its secrets before storing them in the database, you'll need to generate an encryption key, and store it in an environment variable of your choice. Set the encryption key in the model that uses devise:
 
 ```
   devise :two_factor_authenticatable,
@@ -72,49 +72,7 @@ These parameters can be submitted to the standard Devise login route, and the st
 ### Disabling Automatic Login After Password Resets
 If you use the Devise ```recoverable``` strategy, the default behavior after a password reset is to automatically authenticate the user and log them in. This is obviously a problem if a user has two-factor authentication enabled, as resetting the password would get around the 2FA requirement.
 
-Because of this, you need to override the controller and disable the automatic login on your own. If you don't use the ```recoverable``` strategy and don't provide the option of password resets, you don't need to worry about this. An example is as follows:
-
-```ruby
-# app/controllers/passwords_controller.rb
-class PasswordsController < Devise::PasswordsController
-  # Overrides to require a user to log in after resetting the password
-
-  def update
-    self.resource = resource_class.reset_password_by_token(resource_params)
-    yield resource if block_given?
-
-    if resource.errors.empty?
-      resource.unlock_access! if unlockable?(resource)
-      flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
-      set_flash_message(:notice, flash_message) if is_flashing_format?
-
-      # Do not automatically login if two-factor is enabled for this user.
-      # Remove the following three lines entirely if you want to disable
-      # automatic login for all users regardless, after a password reset.
-      unless resource.respond_to?(:otp_required_for_login?) && resource.otp_required_for_login?
-        sign_in(resource_name, resource)
-      end
-
-      respond_with resource, location: after_resetting_password_path_for(resource)
-    else
-      respond_with resource
-    end
-  end
-
-  protected
-
-  def after_resetting_password_path_for(resource)
-    new_session_path(resource)
-  end
-end
-```
-
-And then tell Devise to use your new controller instead of the default:
-
-```ruby
-# app/config/routes.rb
-devise_for :users, :controllers => {:passwords => "passwords"}
-```
+Because of this, you need to set `sign_in_after_reset_password` to false (either globally in your Devise initializer or via `devise_for`)
 
 ### Enabling Two-Factor Authentication
 Enabling two-factor authentication for a user is easy. For example, if my user model were named User, I could do the following:
