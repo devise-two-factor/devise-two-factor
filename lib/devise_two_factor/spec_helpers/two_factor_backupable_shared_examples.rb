@@ -36,7 +36,7 @@ shared_examples 'two_factor_backupable' do
 
     context 'with existing recovery codes' do
       let(:old_codes)        { Faker::Lorem.words }
-      let(:old_codes_hashed) { old_codes.map { |x| Devise.bcrypt subject.class, x } }
+      let(:old_codes_hashed) { old_codes.map { |x| Devise::Encryptor.digest(subject.class, x) } }
 
       before do
         subject.otp_backup_codes = old_codes_hashed
