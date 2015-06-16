@@ -1,4 +1,5 @@
 require 'active_model'
+require 'bcrypt'
 
 module Devise
   module Models
@@ -25,7 +26,7 @@ module Devise
           codes << SecureRandom.hex(code_length / 2) # Hexstring has length 2*n
         end
 
-        hashed_codes = codes.map { |code| Devise.bcrypt self.class, code }
+        hashed_codes = codes.map { |code| Devise::Encryptor.digest self.class, code }
         self.otp_backup_codes = hashed_codes
 
         codes
