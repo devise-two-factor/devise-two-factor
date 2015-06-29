@@ -25,7 +25,7 @@ module Devise
           codes << SecureRandom.hex(code_length / 2) # Hexstring has length 2*n
         end
 
-        hashed_codes = codes.map { |code| Devise.bcrypt self.class, code }
+        hashed_codes = codes.map { |code| Devise::Encryptor.digest(self.class, code) }
         self.otp_backup_codes = hashed_codes
 
         codes
@@ -37,14 +37,7 @@ module Devise
         codes = self.otp_backup_codes || []
 
         codes.each do |backup_code|
-          # We hashed the code with Devise.bcrypt, so if Devise changes that
-          # method, we'll have to adjust our comparison here to match it
-          # TODO Fork Devise and encapsulate this logic in a helper
-          bcrypt      = ::BCrypt::Password.new(backup_code)
-          hashed_code = ::BCrypt::Engine.hash_secret("#{code}#{self.class.pepper}",
-                                                     bcrypt.salt)
-
-          next unless Devise.secure_compare(hashed_code, backup_code)
+          next unless Devise::Encryptor.compare(self.class, backup_code, code)
 
           codes.delete(backup_code)
           self.otp_backup_codes = codes
