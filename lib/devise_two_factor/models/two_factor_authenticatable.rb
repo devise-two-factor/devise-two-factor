@@ -1,4 +1,3 @@
-require 'active_model'
 require 'attr_encrypted'
 require 'rotp'
 
