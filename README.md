@@ -47,6 +47,20 @@ It also adds the :two_factor_authenticatable directive to your model, and sets u
 
 If you're running Rails 3, or do not have strong parameters enabled, the generator will also setup the required mass-assignment security options in your model.
 
+If you're running Rails 4, you'll also need to whitelist `:otp_attempt` as a permitted parameter in Devise `:sign_in` controller. You can do this by adding the following to your `application_controller.rb`
+
+```ruby
+before_action :configure_permitted_parameters, if: :devise_controller?
+
+...
+
+protected
+
+def configure_permitted_parameters
+  devise_parameter_sanitizer.for(:sign_in) << :otp_attempt
+end
+```
+
 **After running the generator, verify that :database_authenticatable is not being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. Loading both :database_authenticatable and :two_factor_authenticatable in a model will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies.**
 
 ## Designing Your Workflow
