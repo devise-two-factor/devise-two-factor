@@ -8,8 +8,7 @@ module Devise
         # 1. The password and the OTP are correct
         # 2. The password is correct, and OTP is not required for login
         # We check the OTP, then defer to DatabaseAuthenticatable
-        if validate(resource) { !resource.otp_required_for_login ||
-                                resource.valid_otp?(params[scope]['otp_attempt']) }
+        if validate(resource) { validate_otp(resource) }
           super
         end
 
@@ -18,6 +17,12 @@ module Devise
         # We want to cascade to the next strategy if this one fails,
         # but database authenticatable automatically halts on a bad password
         @halted = false if @result == :failure
+      end
+
+      def validate_otp(resource)
+        return true unless resource.otp_required_for_login
+        return if params[scope]['otp_attempt'].nil?
+        resource.valid_otp?(params[scope]['otp_attempt'])
       end
     end
   end
