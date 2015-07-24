@@ -1,7 +1,7 @@
 shared_examples 'two_factor_backupable' do
   describe 'required_fields' do
     it 'has the attr_encrypted fields for otp_backup_codes' do
-      Devise::Models::TwoFactorBackupable.required_fields(subject.class).should =~ [:otp_backup_codes]
+      expect(Devise::Models::TwoFactorBackupable.required_fields(subject.class)).to contain_exactly(:otp_backup_codes)
     end
   end
 
@@ -12,24 +12,23 @@ shared_examples 'two_factor_backupable' do
       end
 
       it 'generates the correct number of new recovery codes' do
-        subject.otp_backup_codes.length.should
-          eq(subject.class.otp_number_of_backup_codes)
+        expect(subject.otp_backup_codes.length).to eq(subject.class.otp_number_of_backup_codes)
       end
 
       it 'generates recovery codes of the correct length' do
         @plaintext_codes.each do |code|
-          code.length.should eq(subject.class.otp_backup_code_length)
+          expect(code.length).to eq(subject.class.otp_backup_code_length)
         end
       end
 
       it 'generates distinct recovery codes' do
-        @plaintext_codes.uniq.should =~ @plaintext_codes
+        expect(@plaintext_codes.uniq).to contain_exactly(*@plaintext_codes)
       end
 
       it 'stores the codes as BCrypt hashes' do
         subject.otp_backup_codes.each do |code|
           # $algorithm$cost$(22 character salt + 31 character hash)
-          code.should =~ /\A\$[0-9a-z]{2}\$[0-9]{2}\$[A-Za-z0-9\.\/]{53}\z/
+          expect(code).to match(/\A\$[0-9a-z]{2}\$[0-9]{2}\$[A-Za-z0-9\.\/]{53}\z/)
         end
       end
     end
@@ -44,7 +43,7 @@ shared_examples 'two_factor_backupable' do
       end
 
       it 'invalidates the existing recovery codes' do
-        (subject.otp_backup_codes & old_codes_hashed).should =~ []
+        expect((subject.otp_backup_codes & old_codes_hashed)).to match []
       end
     end
   end
@@ -56,14 +55,14 @@ shared_examples 'two_factor_backupable' do
 
     context 'given an invalid recovery code' do
       it 'returns false' do
-        subject.invalidate_otp_backup_code!('password').should be false
+        expect(subject.invalidate_otp_backup_code!('password')).to be false
       end
     end
 
     context 'given a valid recovery code' do
       it 'returns true' do
         @plaintext_codes.each do |code|
-          subject.invalidate_otp_backup_code!(code).should be true
+          expect(subject.invalidate_otp_backup_code!(code)).to be true
         end
       end
 
@@ -71,7 +70,7 @@ shared_examples 'two_factor_backupable' do
         code = @plaintext_codes.sample
 
         subject.invalidate_otp_backup_code!(code)
-        subject.invalidate_otp_backup_code!(code).should be false
+        expect(subject.invalidate_otp_backup_code!(code)).to be false
       end
 
       it 'does not invalidate the other recovery codes' do
@@ -81,7 +80,7 @@ shared_examples 'two_factor_backupable' do
         @plaintext_codes.delete(code)
 
         @plaintext_codes.each do |code|
-          subject.invalidate_otp_backup_code!(code).should be true
+          expect(subject.invalidate_otp_backup_code!(code)).to be true
         end
       end
     end
