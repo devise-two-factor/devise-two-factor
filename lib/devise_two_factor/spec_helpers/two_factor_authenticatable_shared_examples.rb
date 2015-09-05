@@ -5,7 +5,7 @@ shared_examples 'two_factor_authenticatable' do
 
   describe 'required_fields' do
     it 'should have the attr_encrypted fields for otp_secret' do
-      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt)
+      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep)
     end
   end
 
@@ -44,9 +44,23 @@ shared_examples 'two_factor_authenticatable' do
       expect(subject.valid_otp?(otp)).to be true
     end
 
+    it 'does not validate a previously precisely correct OTP' do
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now)
+      expect(subject.valid_otp?(otp)).to be true
+      expect(subject.valid_otp?(otp)).to be false
+      expect(subject.valid_otp?(otp)).to be false
+    end
+
     it 'validates an OTP within the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true)
       expect(subject.valid_otp?(otp)).to be true
+    end
+
+    it 'does not validate a previously valid OTP within the allowed drift' do
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true)
+      expect(subject.valid_otp?(otp)).to be true
+      expect(subject.valid_otp?(otp)).to be false
+      expect(subject.valid_otp?(otp)).to be false
     end
 
     it 'does not validate an OTP above the allowed drift' do

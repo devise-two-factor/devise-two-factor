@@ -15,17 +15,27 @@ module Devise
       end
 
       def self.required_fields(klass)
-        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt]
+        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep]
       end
 
       # This defaults to the model's otp_secret
-      # If this hasn't been generated yet, pass a secret as an  option
+      # If this hasn't been generated yet, pass a secret as an option
       def valid_otp?(code, options = {})
         otp_secret = options[:otp_secret] || self.otp_secret
         return false unless otp_secret.present?
 
         totp = self.otp(otp_secret)
-        totp.verify_with_drift(code, self.class.otp_allowed_drift)
+        if totp.verify_with_drift(code, self.class.otp_allowed_drift)
+          # An OTP cannot be used more than once in a given timestep
+          # Storing timestep of last valid OTP is sufficient to satisfy this requirement
+          if self.consumed_timestep != current_otp_timestep
+            self.consumed_timestep = current_otp_timestep
+            save(validate: false)
+            return true
+          end
+        end
+
+        false
       end
 
       def otp(otp_secret = self.otp_secret)
@@ -34,6 +44,11 @@ module Devise
 
       def current_otp
         otp.at(Time.now)
+      end
+
+      # ROTP's TOTP#timecode is private, so we duplicate it here
+      def current_otp_timestep
+         Time.now.utc.to_i / otp.interval
       end
 
       def otp_provisioning_uri(account, options = {})
