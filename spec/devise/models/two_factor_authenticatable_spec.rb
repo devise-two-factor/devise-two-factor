@@ -10,7 +10,8 @@ class TwoFactorAuthenticatableDouble
   attr_accessor :consumed_timestep
 
   def save(validate)
-    # noop
+    # noop for testing
+    true
   end
 end
 

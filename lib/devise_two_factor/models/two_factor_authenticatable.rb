@@ -20,20 +20,12 @@ module Devise
 
       # This defaults to the model's otp_secret
       # If this hasn't been generated yet, pass a secret as an option
-      def valid_otp?(code, options = {})
+      def validate_and_consume_otp!(code, options = {})
         otp_secret = options[:otp_secret] || self.otp_secret
         return false unless otp_secret.present?
 
         totp = self.otp(otp_secret)
-        if totp.verify_with_drift(code, self.class.otp_allowed_drift)
-          # An OTP cannot be used more than once in a given timestep
-          # Storing timestep of last valid OTP is sufficient to satisfy this requirement
-          if self.consumed_timestep != current_otp_timestep
-            self.consumed_timestep = current_otp_timestep
-            save(validate: false)
-            return true
-          end
-        end
+        return consume_otp! if totp.verify_with_drift(code, self.class.otp_allowed_drift)
 
         false
       end
@@ -61,6 +53,17 @@ module Devise
       end
 
     protected
+
+      # An OTP cannot be used more than once in a given timestep
+      # Storing timestep of last valid OTP is sufficient to satisfy this requirement
+      def consume_otp!
+        if self.consumed_timestep != current_otp_timestep
+          self.consumed_timestep = current_otp_timestep
+          return save(validate: false)
+        end
+
+        false
+      end
 
       module ClassMethods
         Devise::Models.config(self, :otp_secret_length,

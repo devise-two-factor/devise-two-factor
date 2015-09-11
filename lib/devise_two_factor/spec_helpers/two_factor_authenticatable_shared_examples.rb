@@ -27,7 +27,7 @@ shared_examples 'two_factor_authenticatable' do
     end
   end
 
-  describe '#valid_otp?' do
+  describe '#validate_and_consume_otp!' do
     let(:otp_secret) { '2z6hxkdwi3uvrnpn' }
 
     before :each do
@@ -41,36 +41,36 @@ shared_examples 'two_factor_authenticatable' do
 
     it 'validates a precisely correct OTP' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now)
-      expect(subject.valid_otp?(otp)).to be true
+      expect(subject.validate_and_consume_otp!(otp)).to be true
     end
 
     it 'does not validate a previously precisely correct OTP' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now)
-      expect(subject.valid_otp?(otp)).to be true
-      expect(subject.valid_otp?(otp)).to be false
-      expect(subject.valid_otp?(otp)).to be false
+      expect(subject.validate_and_consume_otp!(otp)).to be true
+      expect(subject.validate_and_consume_otp!(otp)).to be false
+      expect(subject.validate_and_consume_otp!(otp)).to be false
     end
 
     it 'validates an OTP within the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true)
-      expect(subject.valid_otp?(otp)).to be true
+      expect(subject.validate_and_consume_otp!(otp)).to be true
     end
 
     it 'does not validate a previously valid OTP within the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true)
-      expect(subject.valid_otp?(otp)).to be true
-      expect(subject.valid_otp?(otp)).to be false
-      expect(subject.valid_otp?(otp)).to be false
+      expect(subject.validate_and_consume_otp!(otp)).to be true
+      expect(subject.validate_and_consume_otp!(otp)).to be false
+      expect(subject.validate_and_consume_otp!(otp)).to be false
     end
 
     it 'does not validate an OTP above the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift * 2, true)
-      expect(subject.valid_otp?(otp)).to be false
+      expect(subject.validate_and_consume_otp!(otp)).to be false
     end
 
     it 'does not validate an OTP below the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now - subject.class.otp_allowed_drift * 2, true)
-      expect(subject.valid_otp?(otp)).to be false
+      expect(subject.validate_and_consume_otp!(otp)).to be false
     end
   end
 
