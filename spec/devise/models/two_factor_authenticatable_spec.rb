@@ -6,6 +6,13 @@ class TwoFactorAuthenticatableDouble
   extend  ::Devise::Models
 
   devise :two_factor_authenticatable, :otp_secret_encryption_key => 'test-key'
+
+  attr_accessor :consumed_timestep
+
+  def save(validate)
+    # noop for testing
+    true
+  end
 end
 
 describe ::Devise::Models::TwoFactorAuthenticatable do
