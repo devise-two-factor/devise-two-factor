@@ -9,3 +9,5 @@ class AddConsumedTimestepToUsers < ActiveRecord::Migration
   end
 end
 ```
+
+All uses of the `valid_otp?` method should be switched to `validate_and_consume_otp!`
