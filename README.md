@@ -117,6 +117,13 @@ However you decide to handle enrollment, there are a few important consideration
 
 It sounds like a lot of work, but most of these problems have been very elegantly solved by other people. We recommend taking a look at the excellent workflows used by Heroku and Google for inspiration.
 
+### Filtering sensitive parameters from the logs
+To prevent two-factor authentication codes from leaking if your application logs get breached, you'll want to filter sensitive parameters from the Rails logs. Add the following to `config/initializers/filter_parameter_logging.rb`:
+
+```ruby
+Rails.application.config.filter_parameters += [:otp_attempt]
+```
+
 ## Backup Codes
 Devise-two-factor is designed with extensibility in mind. One such extension, TwoFactorBackupable, is included and serves as a good example of how to extend this gem. This plugin allows you to add the ability to generate single-use backup codes for a user, which they may use to bypass two-factor authentication, in the event that they lose access to their device.
 
