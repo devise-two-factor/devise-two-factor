@@ -47,6 +47,7 @@ This generator will add a few columns to the specified model:
 * encrypted_otp_secret
 * encrypted_otp_secret_iv
 * encrypted_otp_secret_salt
+* consumed_timestep
 * otp_required_for_login
 
 It also adds the :two_factor_authenticatable directive to your model, and sets up your encryption key. If present, it will remove :database_authenticatable from the model, as the two strategies are incompatible. Lastly, the generator will add a Warden config block to your Devise initializer, which enables the strategies required for two-factor authentication.
