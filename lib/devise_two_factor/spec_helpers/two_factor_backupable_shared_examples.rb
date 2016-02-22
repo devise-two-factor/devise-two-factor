@@ -57,6 +57,11 @@ shared_examples 'two_factor_backupable' do
       it 'returns false' do
         expect(subject.invalidate_otp_backup_code!('password')).to be false
       end
+
+      it 'gracefully handles when MySQL doesn\'t deserialize YAML from database' do
+        subject.otp_backup_codes = subject.otp_backup_codes.to_yaml
+        expect(subject.invalidate_otp_backup_code!('password')).to be false
+      end
     end
 
     context 'given a valid recovery code' do
@@ -79,6 +84,13 @@ shared_examples 'two_factor_backupable' do
 
         @plaintext_codes.delete(code)
 
+        @plaintext_codes.each do |code|
+          expect(subject.invalidate_otp_backup_code!(code)).to be true
+        end
+      end
+
+      it 'gracefully handles when MySQL doesn\'t deserialize YAML from database' do
+        subject.otp_backup_codes = subject.otp_backup_codes.to_yaml
         @plaintext_codes.each do |code|
           expect(subject.invalidate_otp_backup_code!(code)).to be true
         end
