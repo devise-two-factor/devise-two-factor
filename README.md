@@ -151,6 +151,7 @@ The final installation step is dependent on your version of Rails. If you're not
 ```ruby
 class AddDeviseTwoFactorBackupableToUsers < ActiveRecord::Migration
   def change
+    # Change type from :string to :text if using MySQL database
     add_column :users, :otp_backup_codes, :string, array: true
   end
 end
@@ -181,6 +182,7 @@ You'll then simply have to create a migration to add an array named `otp_backup_
 ```ruby
 class AddTwoFactorBackupCodesToUsers < ActiveRecord::Migration
   def change
+    # Change type from :string_array to :text_array if using MySQL database
     add_column :users, :otp_backup_codes, :string_array
   end
 end
