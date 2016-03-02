@@ -71,6 +71,11 @@ shared_examples 'two_factor_authenticatable' do
       expect(subject.validate_and_consume_otp!(otp)).to be true
     end
 
+    it 'fails a nil OTP value' do
+      otp = nil
+      expect(subject.validate_and_consume_otp!(otp)).to be false
+    end
+
     it 'validates an OTP within the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true)
       expect(subject.validate_and_consume_otp!(otp)).to be true

@@ -22,7 +22,7 @@ module Devise
       # If this hasn't been generated yet, pass a secret as an option
       def validate_and_consume_otp!(code, options = {})
         otp_secret = options[:otp_secret] || self.otp_secret
-        return false unless otp_secret.present?
+        return false unless code.present? && otp_secret.present?
 
         totp = self.otp(otp_secret)
         return consume_otp! if totp.verify_with_drift(code, self.class.otp_allowed_drift)
