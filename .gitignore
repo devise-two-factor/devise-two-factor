@@ -1,49 +1,47 @@
-Gemfile.lock
 *.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
 
-# rcov generated
-coverage
-coverage.data
+## Specific to RubyMotion:
+.dat*
+.repl_history
+build/
+*.bridgesupport
+build-iPhoneOS/
+build-iPhoneSimulator/
 
-# yard generated
-doc
-.yardoc
-
-# bundler
-.bundle
-
-# jeweler generated
-pkg
-
-# Have editor/IDE/OS specific files you need to ignore? Consider using a global gitignore:
+## Specific to RubyMotion (use of CocoaPods):
 #
-# * Create a file at ~/.gitignore
-# * Include files you want ignored
-# * Run: git config --global core.excludesfile ~/.gitignore
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
 #
-# After doing this, these files will be ignored in all your git projects,
-# saving you from having to 'pollute' every project you touch with them
-#
-# Not sure what to needs to be ignored for particular editors/OSes? Here's some ideas to get you started. (Remember, remove the leading # of the line)
-#
-# For MacOS:
-#
-#.DS_Store
+# vendor/Pods/
 
-# For TextMate
-#*.tmproj
-#tmtags
+## Documentation cache and generated files:
+/.yardoc/
+/_yardoc/
+/doc/
+/rdoc/
 
-# For emacs:
-#*~
-#\#*
-#.\#*
+## Environment normalization:
+/.bundle/
+/vendor/bundle
+/lib/bundler/man/
 
-# For vim:
-#*.swp
+# for a library or gem, you might want to ignore these files since the code is
+# intended to run in multiple environments; otherwise, check them in:
+Gemfile.lock
+.ruby-version
+.ruby-gemset
 
-# For redcar:
-#.redcar
-
-# For rubinius:
-#*.rbc
+# unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
+.rvmrc
