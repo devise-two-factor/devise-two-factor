@@ -68,6 +68,20 @@ def configure_permitted_parameters
 end
 ```
 
+If you're running Devise 4.0.0 or above, you'll want to use `.permit` instead:
+
+```ruby
+before_action :configure_permitted_parameters, if: :devise_controller?
+
+...
+
+protected
+
+def configure_permitted_parameters
+  devise_parameter_sanitizer.permit(:sign_in, keys: [:otp_attempt])
+end
+```
+
 **After running the generator, verify that :database_authenticatable is not being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. Loading both :database_authenticatable and `:two_factor_authenticatable` in a model will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies.**
 
 ## Designing Your Workflow
