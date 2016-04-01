@@ -8,7 +8,7 @@ class TwoFactorAuthenticatableDouble
 
   define_model_callbacks :update
 
-  devise :two_factor_authenticatable, :otp_secret_encryption_key => 'test-key'
+  devise :two_factor_authenticatable, :otp_secret_encryption_key => 'test-key'*4
 
   attr_accessor :consumed_timestep
 

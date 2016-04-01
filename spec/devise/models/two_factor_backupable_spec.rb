@@ -9,7 +9,7 @@ class TwoFactorBackupableDouble
   define_model_callbacks :update
 
   devise :two_factor_authenticatable, :two_factor_backupable,
-         :otp_secret_encryption_key => 'test-key'
+         :otp_secret_encryption_key => 'test-key'*4
 
   attr_accessor :otp_backup_codes
 end
