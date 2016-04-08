@@ -9,7 +9,7 @@ module Devise
 
       included do
         #
-        # removed `extend AttrEncrypted`
+        # add condition for `extend AttrEncrypted` to fix attr_encrypted? not working bug.
         #
         # in 1.x, `Object.extend AttrEncrypted`, ref https://github.com/attr-encrypted/attr_encrypted/blob/v1.3.4/lib/attr_encrypted.rb#L357
         # in 3.x, `ActiveRecord::Base.extend AttrEncrypted`, ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted/adapters/active_record.rb#L124
@@ -22,6 +22,10 @@ module Devise
         # ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted.rb#L217
         # ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted.rb#L278
         #
+        unless respond_to?(:attr_encrypted?)
+          extend AttrEncrypted
+        end
+
         unless self.attr_encrypted?(:otp_secret)
           attr_encrypted :otp_secret, :key  => self.otp_secret_encryption_key,
                                       :mode => :per_attribute_iv_and_salt
