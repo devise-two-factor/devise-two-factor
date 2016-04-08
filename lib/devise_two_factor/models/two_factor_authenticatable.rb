@@ -8,9 +8,24 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        extend AttrEncrypted
-        attr_encrypted :otp_secret, :key  => self.otp_secret_encryption_key,
-                                    :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
+        #
+        # removed `extend AttrEncrypted`
+        #
+        # in 1.x, `Object.extend AttrEncrypted`, ref https://github.com/attr-encrypted/attr_encrypted/blob/v1.3.4/lib/attr_encrypted.rb#L357
+        # in 3.x, `ActiveRecord::Base.extend AttrEncrypted`, ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted/adapters/active_record.rb#L124
+        # in 3.x, for DataMapper, ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted/adapters/data_mapper.rb#L14
+        # in 3.x, for Sequel, ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted/adapters/sequel.rb#L12
+        # so, in model, we don't have to extend again.
+        #
+        # and it affect the attr_encrypted?
+        # ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted.rb#L11
+        # ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted.rb#L217
+        # ref https://github.com/attr-encrypted/attr_encrypted/blob/3.0.1/lib/attr_encrypted.rb#L278
+        #
+        unless self.attr_encrypted?(:otp_secret)
+          attr_encrypted :otp_secret, :key  => self.otp_secret_encryption_key,
+                                      :mode => :per_attribute_iv_and_salt
+        end
 
         attr_accessor :otp_attempt
       end
