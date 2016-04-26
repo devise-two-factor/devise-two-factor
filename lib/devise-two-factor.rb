@@ -5,7 +5,7 @@ require 'devise_two_factor/strategies'
 module Devise
   # The length of generated OTP secrets
   mattr_accessor :otp_secret_length
-  @@otp_secret_length = 128
+  @@otp_secret_length = 16
 
   # The number of seconds before and after the current
   # time for which codes will be accepted
