@@ -1,2 +1,3 @@
 require 'devise_two_factor/spec_helpers/two_factor_authenticatable_shared_examples'
 require 'devise_two_factor/spec_helpers/two_factor_backupable_shared_examples'
+require 'devise_two_factor/spec_helpers/two_factor_authenticatable_with_customize_attr_encrypted_shared_examples'

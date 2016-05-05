@@ -106,4 +106,10 @@ shared_examples 'two_factor_authenticatable' do
       expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*issuer=#{issuer}(&|$)})
     end
   end
+
+  describe 'otp_secret options' do
+    it 'should be of the mode' do
+      expect(subject.encrypted_attributes[:otp_secret][:mode]).to eq(:per_attribute_iv_and_salt)
+    end
+  end
 end
