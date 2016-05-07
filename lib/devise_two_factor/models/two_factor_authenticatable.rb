@@ -8,9 +8,15 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        extend AttrEncrypted
-        attr_encrypted :otp_secret, :key  => self.otp_secret_encryption_key,
-                                    :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
+        unless singleton_class.ancestors.include?(AttrEncrypted)
+          extend AttrEncrypted
+        end
+
+        unless attr_encrypted?(:otp_secret)
+          attr_encrypted :otp_secret,
+            :key  => self.otp_secret_encryption_key,
+            :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
+        end
 
         attr_accessor :otp_attempt
       end
