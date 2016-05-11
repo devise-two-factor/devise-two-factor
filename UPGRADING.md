@@ -1,5 +1,7 @@
 # Guide to upgrading from 2.x to 3.x
 
+Pull request #76 allows for compatibility with `attr_encrypted` 3.0, which should be used due to a security vulnerability discovered in 2.0.
+
 Pull request #73 allows for compatibility with `attr_encrypted` 2.0. This version changes many of the defaults which must be taken into account to avoid corrupted OTP secrets on your model.
 
 Due to new security practices in `attr_encrypted` an encryption key with insufficient length will cause an error. If you run into this, you may set `insecure_mode: true` in the `attr_encrypted` options.
