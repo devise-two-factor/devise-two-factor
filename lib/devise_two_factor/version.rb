@@ -1,3 +1,3 @@
 module DeviseTwoFactor
-   VERSION = '3.0.0.pre1'.freeze
+   VERSION = '3.0.0'.freeze
 end
