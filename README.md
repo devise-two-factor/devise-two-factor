@@ -122,6 +122,17 @@ Before you can do this however, you need to decide how you're going to transmit 
 
 At Tinfoil Security, we opted to use the excellent [rqrcode-rails3](https://github.com/samvincent/rqrcode-rails3) gem to generate a QR-code representing the user's secret key, which can then be scanned by any mobile two-factor authentication client.
 
+If you decide to do this you'll need to generate a URI to act as the source for the QR code. This can be done using the `User#otp_provisioning_uri` method.
+
+```ruby
+issuer = 'Your App'
+label = "#{issuer}:#{current_user.email}"
+
+current_user.otp_provisioning_uri(label, issuer: issuer)
+
+# > "otpauth://totp/Your%20App:user@example.com?secret=[otp_secret]&issuer=Your+App"
+```
+
 If you instead to decide to send the one-time password to the user directly, such as via SMS, you'll need a mechanism for generating the one-time password on the server:
 
 ```ruby
