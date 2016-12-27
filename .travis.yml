@@ -5,6 +5,16 @@ before_install:
   - gem update --system
   - gem update bundler
 rvm:
-  - "2.1"
-  - "2.2"
-  - "2.3.0"
+  - 2.1
+  - 2.2.5
+  - 2.3.3
+  - 2.4.0
+gemfile:
+  - gemfiles/rack-2.gemfile
+  - gemfiles/rack-1.gemfile
+matrix:
+  exclude:
+    - rvm: 2.1
+      gemfile: gemfiles/rack-2.gemfile
+    - rvm: 2.4.0
+      gemfile: gemfiles/rack-1.gemfile
