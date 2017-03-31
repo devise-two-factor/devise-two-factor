@@ -90,6 +90,125 @@ shared_examples 'two_factor_authenticatable' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now - subject.class.otp_allowed_drift * 2, true)
       expect(subject.validate_and_consume_otp!(otp)).to be false
     end
+
+    context 'used multiple times' do
+      let(:drift_interval_times) { 3 }
+
+      before do
+        # set the drift interval to x times the interval
+        subject.class.otp_allowed_drift = subject.otp.interval * drift_interval_times
+      end
+
+      context 'a valid and consumed otp' do
+        let(:consumed_otp) { subject.current_otp }
+
+        before do
+          subject.validate_and_consume_otp!(consumed_otp)
+        end
+
+        context 'in the next interval' do
+          before do
+            Timecop.travel(Time.now + subject.otp.interval)
+          end
+
+          it 'became valid again' do
+            expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
+          end
+        end
+
+        context 'in the previous interval' do
+          before do
+            Timecop.travel(Time.now - subject.otp.interval)
+          end
+
+          it 'became valid again' do
+            expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
+          end
+        end
+
+        context 'within the drift' do
+          before do
+            # tavel back into the past to the beginning of the drift allowed period
+            Timecop.travel(Time.now - subject.otp.interval * drift_interval_times)
+          end
+
+          it 'became valid again' do
+            otp = subject.current_otp
+            subject.validate_and_consume_otp!(otp)
+            # check to otp within the interval
+            (drift_interval_times * 2).times {
+              expect(subject.validate_and_consume_otp!(otp)).to be false
+              Timecop.travel(Time.now + subject.otp.interval)
+            }
+          end
+        end
+
+        context 'before, within or after the drift' do
+          before do
+            # tavel back into the past before the drift allowed period
+            Timecop.travel(Time.now - subject.otp.interval * drift_interval_times - 1)
+          end
+
+          it 'became valid again' do
+            otp = subject.current_otp
+            subject.validate_and_consume_otp!(otp)
+            # check to otp form before the drift allowed time to after the drift allowed time
+            (drift_interval_times * 2 + 2).times {
+              expect(subject.validate_and_consume_otp!(otp)).to be false
+              Timecop.travel(Time.now + subject.otp.interval)
+            }
+          end
+        end
+      end
+
+      context 'at least one of many valid and consumed otps' do
+
+        before do
+          # tavel back into the past before the drift allowed period
+          Timecop.travel(Time.now - subject.otp.interval * drift_interval_times)
+        end
+
+        it 'became valid again (sequential)' do
+          otps = []
+          (drift_interval_times * 2).times {
+            otp = ROTP::TOTP.new(otp_secret).at(Time.now)
+            subject.validate_and_consume_otp!(otp)
+            otps << otp
+            otps.each { |o|
+              expect(subject.validate_and_consume_otp!(o)).to be false
+            }
+            Timecop.travel(Time.now + subject.otp.interval)
+          }
+        end
+
+        it 'became valid again (random order)' do
+          # get all valid otps within the drift
+          otps = []
+          (drift_interval_times*2).times {
+            otps << ROTP::TOTP.new(otp_secret).at(Time.now, true)
+            Timecop.travel(Time.now + subject.otp.interval)
+          }
+          # return to the present
+          Timecop.return
+          # all otps within the drift must be valid
+          otps.each { |otp| subject.validate_and_consume_otp!(otp) }
+
+          # tavel back into the past before the drift allowed period
+          Timecop.travel(Time.now - subject.otp.interval * drift_interval_times - 1)
+
+          # otp never become valid again
+          otps.shuffle!
+          (drift_interval_times*2+2).times {
+            otps.each { |otp|
+              expect(subject.validate_and_consume_otp!(otp)).to be false
+            }
+            Timecop.travel(Time.now + subject.otp.interval)
+          }
+        end
+      end
+    end
+
+
   end
 
   describe '#otp_provisioning_uri' do
