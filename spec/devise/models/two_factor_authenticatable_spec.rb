@@ -59,7 +59,7 @@ describe ::Devise::Models::TwoFactorAuthenticatable do
 
     before :each do
       subject.otp_secret = subject.class.generate_otp_secret
-      subject.consumed_timestep = nil
+      subject.consumed_timestep = 0
     end
 
     describe 'otp_secret options' do

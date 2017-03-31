@@ -32,7 +32,7 @@ module Devise
         return false unless code.present? && otp_secret.present?
 
         totp = self.otp(otp_secret)
-        return consume_otp! if totp.verify_with_drift(code, self.class.otp_allowed_drift)
+        return consume_otp! code, totp
 
         false
       end
@@ -43,11 +43,6 @@ module Devise
 
       def current_otp
         otp.at(Time.now)
-      end
-
-      # ROTP's TOTP#timecode is private, so we duplicate it here
-      def current_otp_timestep
-         Time.now.utc.to_i / otp.interval
       end
 
       def otp_provisioning_uri(account, options = {})
@@ -61,15 +56,42 @@ module Devise
 
     protected
 
-      # An OTP cannot be used more than once in a given timestep
-      # Storing timestep of last valid OTP is sufficient to satisfy this requirement
-      def consume_otp!
-        if self.consumed_timestep != current_otp_timestep
-          self.consumed_timestep = current_otp_timestep
+      # Consumes an OTP code and returns true if successful
+      # @param [String] code the OTP code to check against
+      # @return [Boolean] true if the code wasn't already used and a more recent code hasn't been used yet.
+      #                   false if the code is invalid, as already been used or a more recent code has been consumed.
+      def consume_otp!(code, totp = otp)
+        self.consumed_timestep ||= 0 # TODO REMOVE only necessary to pass some tests
+
+        otp_timestep = otp_timestep(code, totp)
+        if consumed_timestep < otp_timestep
+          self.consumed_timestep = otp_timestep
           return save(validate: false)
         end
 
         false
+      end
+
+      # Determines the time step in which the code is valid
+      # @param [String] code the OTP code to determine the interval in which the code is valid
+      # @return [Integer] the time step with the code is valid for or 0 if the code is invalid
+      def otp_timestep(code, totp = otp)
+        return 0 if otp_time(code) == nil
+        otp_time(code, totp) / otp.interval
+      end
+
+      # Determines a time as an integer within the interval when the code is, was or will be valid
+      # slightly changed code from @see totp#verify_with_drift
+      # @param [String] code the OTP code the determine a time when the code is valid
+      # @option [Integer] drift the number of seconds that the client and server are allowed to drift apart.
+      # Or in other words, the number of seconds before and after the current time for which codes will be accepted
+      # @option [Time] defaults to Time.now
+      # @return [Integer] a time as integer when the OTP code was valid. (lies within the interval) or nil
+      def otp_time(code, totp = otp, drift = self.class.otp_allowed_drift, time = Time.now)
+        time = time.to_i
+        times = (time-drift..time+drift).step(totp.interval).to_a
+        times << time + drift if times.last < time + drift
+        times.find { |ti| totp.verify(code, ti) }
       end
 
       module ClassMethods
