@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'rotp',           '~> 2.0'
 
   s.add_development_dependency 'activemodel'
+  s.add_development_dependency 'appraisal'
   s.add_development_dependency 'bundler',    '> 1.0'
   s.add_development_dependency 'rspec',      '> 3'
   s.add_development_dependency 'simplecov'
