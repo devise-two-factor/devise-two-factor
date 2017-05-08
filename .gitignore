@@ -9,6 +9,8 @@
 /test/tmp/
 /test/version_tmp/
 /tmp/
+/gemfiles/.bundle/
+/gemfiles/*.gemfile.lock
 
 ## Specific to RubyMotion:
 .dat*
@@ -42,6 +44,7 @@ build-iPhoneSimulator/
 Gemfile.lock
 .ruby-version
 .ruby-gemset
+.tool-versions
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
