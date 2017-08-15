@@ -15,14 +15,14 @@ module Devise
         unless attr_encrypted?(:otp_secret)
           attr_encrypted :otp_secret,
             :key  => self.otp_secret_encryption_key,
-            :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
+            :mode => :per_attribute_iv unless self.attr_encrypted?(:otp_secret)
         end
 
         attr_accessor :otp_attempt
       end
 
       def self.required_fields(klass)
-        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep]
+        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :consumed_timestep]
       end
 
       # This defaults to the model's otp_secret

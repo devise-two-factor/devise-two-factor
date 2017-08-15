@@ -21,7 +21,6 @@ module DeviseTwoFactor
                                 "add_devise_two_factor_to_#{plural_name}",
                                 "encrypted_otp_secret:string",
                                 "encrypted_otp_secret_iv:string",
-                                "encrypted_otp_secret_salt:string",
                                 "consumed_timestep:integer",
                                 "otp_required_for_login:boolean"
                               ]
