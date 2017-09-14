@@ -1,4 +1,4 @@
-shared_examples 'two_factor_authenticatable' do
+RSpec.shared_examples 'two_factor_authenticatable' do
   before :each do
     subject.otp_secret = subject.class.generate_otp_secret
     subject.consumed_timestep = nil
