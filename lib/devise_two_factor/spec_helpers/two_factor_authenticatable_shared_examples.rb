@@ -102,8 +102,8 @@ shared_examples 'two_factor_authenticatable' do
     end
 
     it 'should return uri with issuer option' do
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*issuer=#{issuer}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{account}\?.*issuer=#{issuer}(&|$)})
     end
   end
 end
