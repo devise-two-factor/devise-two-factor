@@ -7,7 +7,7 @@ Devise-Two-Factor is a minimalist extension to Devise which offers support for t
 
 * Allows you to incorporate two-factor authentication into your existing models
 * Is opinionated about security, so you don't have to be
-* Integrates easily with two-factor applications like Google Authenticator and Authy
+* Integrates easily with two-factor applications like [Google Authenticator](https://support.google.com/accounts/answer/1066447?hl=en) and [Authy](https://authy.com/)
 * Is extensible, and includes two-factor backup codes as an example of how plugins can be structured
 
 ## Example App
