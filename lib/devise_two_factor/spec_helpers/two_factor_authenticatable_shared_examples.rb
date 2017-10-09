@@ -119,7 +119,7 @@ shared_examples 'two_factor_authenticatable' do
         Timecop.travel(subject.otp.interval.seconds.from_now)
       end
 
-      # This currently fails!
+      # This spec tests that reuse of the OTP is not allowed
       it 'fails to validate' do
         expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
       end
