@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 3.0.2
+- Add Rails 5.1 support
+
 ## 3.0.1
 - Qualify call to rspec shared_examples
 
