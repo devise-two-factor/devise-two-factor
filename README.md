@@ -49,7 +49,6 @@ This generator will add a few columns to the specified model:
 
 * encrypted_otp_secret
 * encrypted_otp_secret_iv
-* encrypted_otp_secret_salt
 * consumed_timestep
 * otp_required_for_login
 

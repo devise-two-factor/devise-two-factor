@@ -6,7 +6,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
   describe 'required_fields' do
     it 'should have the attr_encrypted fields for otp_secret' do
-      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep)
+      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:encrypted_otp_secret, :encrypted_otp_secret_iv, :consumed_timestep)
     end
   end
 
@@ -21,10 +21,6 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
     it 'stores an iv for otp_secret' do
       expect(subject.encrypted_otp_secret_iv).to_not be_nil
-    end
-
-    it 'stores a salt for otp_secret' do
-      expect(subject.encrypted_otp_secret_salt).to_not be_nil
     end
   end
 

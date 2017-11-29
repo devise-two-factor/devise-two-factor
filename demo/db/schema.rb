@@ -28,7 +28,6 @@ ActiveRecord::Schema.define(version: 20140516191259) do
     t.datetime "updated_at"
     t.string   "encrypted_otp_secret"
     t.string   "encrypted_otp_secret_iv"
-    t.string   "encrypted_otp_secret_salt"
     t.integer  "consumed_timestep"
     t.boolean  "otp_required_for_login"
   end
