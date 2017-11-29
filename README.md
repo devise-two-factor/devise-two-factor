@@ -10,6 +10,9 @@ Devise-Two-Factor is a minimalist extension to Devise which offers support for t
 * Integrates easily with two-factor applications like [Google Authenticator](https://support.google.com/accounts/answer/1066447?hl=en) and [Authy](https://authy.com/)
 * Is extensible, and includes two-factor backup codes as an example of how plugins can be structured
 
+## Contributing
+We welcome pull requests, bug reports, and other contributions. We're especially looking for help getting this gem fully compatible with Rails 5+ and squashing any deprecation messages.
+
 ## Example App
 An example Rails 4 application is provided in the `demo` directory. It showcases a minimal example of Devise-Two-Factor in action, and can act as a reference for integrating the gem into your own application.
 
