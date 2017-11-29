@@ -1,5 +1,5 @@
 # Devise-Two-Factor Authentication
-By [Tinfoil Security](http://tinfoilsecurity.com/)
+By [Tinfoil Security](https://www.tinfoilsecurity.com/). Interested in [working with us](https://www.tinfoilsecurity.com/jobs)? We're hiring!
 
 [![Build Status](https://travis-ci.org/tinfoil/devise-two-factor.svg?branch=master)](https://travis-ci.org/tinfoil/devise-two-factor)
 
