@@ -22,7 +22,7 @@ module Devise
       end
 
       def self.required_fields(klass)
-        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep]
+        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep, :last_otp_at]
       end
 
       # This defaults to the model's otp_secret
@@ -32,7 +32,11 @@ module Devise
         return false unless code.present? && otp_secret.present?
 
         totp = self.otp(otp_secret)
-        return consume_otp! if totp.verify_with_drift(code, self.class.otp_allowed_drift)
+        verified_at_timestamp = totp.verify_with_drift_and_prior(code, self.class.otp_allowed_drift, self.last_otp_at)
+        if verified_at_timestamp
+          self.last_otp_at = verified_at_timestamp
+          return consume_otp!
+        end
 
         false
       end

@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20140516191259) do
     t.string   "encrypted_otp_secret_salt"
     t.integer  "consumed_timestep"
     t.boolean  "otp_required_for_login"
+    t.integer  "last_otp_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

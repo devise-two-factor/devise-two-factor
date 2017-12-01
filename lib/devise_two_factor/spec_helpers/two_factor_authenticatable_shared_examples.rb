@@ -6,7 +6,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
   describe 'required_fields' do
     it 'should have the attr_encrypted fields for otp_secret' do
-      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep)
+      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep, :last_otp_at)
     end
   end
 
@@ -102,8 +102,27 @@ RSpec.shared_examples 'two_factor_authenticatable' do
     end
 
     it 'should return uri with issuer option' do
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*issuer=#{issuer}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{account}\?.*issuer=#{issuer}(&|$)})
+    end
+  end
+
+  context 'given a valid OTP used multiple times within the allowed drift' do
+    let(:consumed_otp) { ROTP::TOTP.new(subject.otp_secret).at(Time.now) }
+
+    before do
+      subject.validate_and_consume_otp!(consumed_otp)
+    end
+
+    context 'after the otp interval' do
+      before do
+        Timecop.travel(subject.otp.interval.seconds.from_now)
+      end
+
+      # This spec tests that reuse of the OTP is not allowed
+      it 'fails to validate' do
+        expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
+      end
     end
   end
 end
