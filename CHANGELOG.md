@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 3.0.2
+- Add Rails 5.1 support
+
+## 3.0.1
+- Qualify call to rspec shared_examples
+
 ## 3.0.0
 See `UPGRADING.md` for specific help with breaking changes from 2.x to 3.0.0.
 

@@ -1,5 +1,5 @@
 # Devise-Two-Factor Authentication
-By [Tinfoil Security](http://tinfoilsecurity.com/)
+By [Tinfoil Security](https://www.tinfoilsecurity.com/). Interested in [working with us](https://www.tinfoilsecurity.com/jobs)? We're hiring!
 
 [![Build Status](https://travis-ci.org/tinfoil/devise-two-factor.svg?branch=master)](https://travis-ci.org/tinfoil/devise-two-factor)
 
@@ -7,8 +7,11 @@ Devise-Two-Factor is a minimalist extension to Devise which offers support for t
 
 * Allows you to incorporate two-factor authentication into your existing models
 * Is opinionated about security, so you don't have to be
-* Integrates easily with two-factor applications like Google Authenticator and Authy
+* Integrates easily with two-factor applications like [Google Authenticator](https://support.google.com/accounts/answer/1066447?hl=en) and [Authy](https://authy.com/)
 * Is extensible, and includes two-factor backup codes as an example of how plugins can be structured
+
+## Contributing
+We welcome pull requests, bug reports, and other contributions. We're especially looking for help getting this gem fully compatible with Rails 5+ and squashing any deprecation messages.
 
 ## Example App
 An example Rails 4 application is provided in the `demo` directory. It showcases a minimal example of Devise-Two-Factor in action, and can act as a reference for integrating the gem into your own application.
@@ -121,6 +124,17 @@ current_user.save!
 Before you can do this however, you need to decide how you're going to transmit two-factor tokens to a user. Common strategies include sending an SMS, or using a mobile application such as Google Authenticator.
 
 At Tinfoil Security, we opted to use the excellent [rqrcode-rails3](https://github.com/samvincent/rqrcode-rails3) gem to generate a QR-code representing the user's secret key, which can then be scanned by any mobile two-factor authentication client.
+
+If you decide to do this you'll need to generate a URI to act as the source for the QR code. This can be done using the `User#otp_provisioning_uri` method.
+
+```ruby
+issuer = 'Your App'
+label = "#{issuer}:#{current_user.email}"
+
+current_user.otp_provisioning_uri(label, issuer: issuer)
+
+# > "otpauth://totp/Your%20App:user@example.com?secret=[otp_secret]&issuer=Your+App"
+```
 
 If you instead to decide to send the one-time password to the user directly, such as via SMS, you'll need a mechanism for generating the one-time password on the server:
 

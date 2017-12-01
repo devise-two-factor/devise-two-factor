@@ -1,4 +1,4 @@
-shared_examples 'two_factor_backupable' do
+RSpec.shared_examples 'two_factor_backupable' do
   describe 'required_fields' do
     it 'has the attr_encrypted fields for otp_backup_codes' do
       expect(Devise::Models::TwoFactorBackupable.required_fields(subject.class)).to contain_exactly(:otp_backup_codes)
