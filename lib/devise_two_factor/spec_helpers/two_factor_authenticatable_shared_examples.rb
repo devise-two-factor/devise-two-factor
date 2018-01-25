@@ -165,12 +165,13 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
         before do
           # tavel back into the past before the drift allowed period
-          Timecop.travel(Time.now - subject.otp.interval * drift_interval_times)
+          Timecop.travel(Time.now - subject.otp.interval * 2)
         end
 
         it 'became valid again (sequential)' do
+
           otps = []
-          (drift_interval_times * 2).times {
+          (drift_interval_times + 2).times {
             otp = ROTP::TOTP.new(otp_secret).at(Time.now)
             subject.validate_and_consume_otp!(otp)
             otps << otp
@@ -182,28 +183,29 @@ RSpec.shared_examples 'two_factor_authenticatable' do
         end
 
         it 'became valid again (random order)' do
+
           # get all valid otps within the drift
           otps = []
-          (drift_interval_times*2).times {
+          (drift_interval_times + 2).times {
             otps << ROTP::TOTP.new(otp_secret).at(Time.now, true)
             Timecop.travel(Time.now + subject.otp.interval)
           }
-          # return to the present
-          Timecop.return
+
+          Timecop.return # return to the present
+
           # all otps within the drift must be valid
           otps.each { |otp| subject.validate_and_consume_otp!(otp) }
 
-          # tavel back into the past before the drift allowed period
-          Timecop.travel(Time.now - subject.otp.interval * drift_interval_times - 1)
+          Timecop.return # return to the present
 
           # otp never become valid again
           otps.shuffle!
-          (drift_interval_times*2+2).times {
-            otps.each { |otp|
+          drift_interval_times.times {
+            otps.each {|otp|
               expect(subject.validate_and_consume_otp!(otp)).to be false
             }
-            Timecop.travel(Time.now + subject.otp.interval)
           }
+
         end
       end
     end
