@@ -14,13 +14,19 @@ module Devise
       # 2) Generates otp_number_of_backup_codes backup codes
       # 3) Stores the hashed backup codes in the database
       # 4) Returns a plaintext array of the generated backup codes
-      def generate_otp_backup_codes!
+      def generate_otp_backup_codes!(opts={})
         codes           = []
         number_of_codes = self.class.otp_number_of_backup_codes
         code_length     = self.class.otp_backup_code_length
 
-        number_of_codes.times do
-          codes << SecureRandom.hex(code_length / 2) # Hexstring has length 2*n
+        if opts[:numerical] == true
+          number_of_codes.times do
+            codes << code_length.times.map { SecureRandom.random_number(9) }.join
+          end
+        else
+          number_of_codes.times do
+            codes << SecureRandom.hex(code_length / 2) # Hexstring has length 2*n
+          end
         end
 
         hashed_codes = codes.map { |code| Devise::Encryptor.digest(self.class, code) }
