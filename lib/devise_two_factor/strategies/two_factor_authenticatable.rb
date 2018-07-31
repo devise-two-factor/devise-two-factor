@@ -21,6 +21,10 @@ module Devise
 
       def validate_otp(resource)
         return true unless resource.otp_required_for_login
+
+        # if fingerprints exists fallback to database strategy
+        return true if resource.browser_fingerprint[params['device_fp']].present?
+
         return if params[scope]['otp_attempt'].nil?
         resource.validate_and_consume_otp!(params[scope]['otp_attempt'])
       end
