@@ -31,6 +31,10 @@ module Devise
       # This defaults to the model's otp_secret
       # If this hasn't been generated yet, pass a secret as an option
       def validate_and_consume_otp!(code, options = {})
+        @valid_otp = validate_and_consume_otp_code!(code, options)
+      end
+
+      def validate_and_consume_otp_code!(code, options = {})
         otp_secret = options[:otp_secret] || self.otp_secret
         return false unless code.present? && otp_secret.present?
 
@@ -40,6 +44,14 @@ module Devise
         end
 
         false
+      end
+
+      def unauthenticated_message
+        if !@valid_otp
+          :invalid_otp
+        else
+          super
+        end
       end
 
       def otp(otp_secret = self.otp_secret)
