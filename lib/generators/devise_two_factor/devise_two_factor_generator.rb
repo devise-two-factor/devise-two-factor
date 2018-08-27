@@ -10,7 +10,6 @@ module DeviseTwoFactor
 
       def install_devise_two_factor
         create_devise_two_factor_migration
-        inject_strategies_into_warden_config
         inject_devise_directives_into_model
       end
 
@@ -27,16 +26,6 @@ module DeviseTwoFactor
                               ]
 
         Rails::Generators.invoke('active_record:migration', migration_arguments)
-      end
-
-      def inject_strategies_into_warden_config
-        config_path = File.join('config', 'initializers', 'devise.rb')
-
-        content = "  config.warden do |manager|\n" \
-                  "    manager.default_strategies(:scope => :#{singular_table_name}).unshift :two_factor_authenticatable\n" \
-                  "  end\n\n"
-
-        inject_into_file(config_path, content, after: "Devise.setup do |config|\n")
       end
 
       def inject_devise_directives_into_model
