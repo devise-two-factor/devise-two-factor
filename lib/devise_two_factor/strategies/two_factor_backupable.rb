@@ -1,23 +1,19 @@
 module Devise
   module Strategies
-    class TwoFactorBackupable < Devise::Strategies::DatabaseAuthenticatable
+    class TwoFactorBackupable < Devise::Strategies::TwoFactorAuthenticatable
 
-      def authenticate!
-        resource = mapping.to.find_for_database_authentication(authentication_hash)
+      private
 
-        if validate(resource) { resource.invalidate_otp_backup_code!(params[scope]['otp_attempt']) }
-          # Devise fails to authenticate invalidated resources, but if we've
-          # gotten here, the object changed (Since we deleted a recovery code)
-          resource.save!
-          super
-        end
-
-        fail(:not_found_in_database) unless resource
-
-        # We want to cascade to the next strategy if this one fails,
-        # but database authenticatable automatically halts on a bad password
-        @halted = false if @result == :failure
+      def skip?
+        params[scope].key?('otp_attempt')
       end
+
+      def valid_otp_backup?(resource)
+        return false if params[scope]['otp_backup'].nil?
+        resource.invalidate_otp_backup_code!(params[scope]['otp_backup']) && resource.save
+      end
+
+      alias_method :valid_otp?, :valid_otp_backup?
     end
   end
 end

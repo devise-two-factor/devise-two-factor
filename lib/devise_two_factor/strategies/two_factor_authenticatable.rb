@@ -3,25 +3,37 @@ module Devise
     class TwoFactorAuthenticatable < Devise::Strategies::DatabaseAuthenticatable
 
       def authenticate!
-        resource = mapping.to.find_for_database_authentication(authentication_hash)
-        # We authenticate in two cases:
-        # 1. The password and the OTP are correct
-        # 2. The password is correct, and OTP is not required for login
-        # We check the OTP, then defer to DatabaseAuthenticatable
-        if validate(resource) { validate_otp(resource) }
-          super
+        resource  = password.present? && mapping.to.find_for_database_authentication(authentication_hash)
+        hashed = false
+
+        unless resource && validate(resource){ hashed = true; resource.valid_password?(password) }
+          mapping.to.new.password = password if !hashed && Devise.paranoid
+          return fail!(:not_found_in_database)
         end
 
-        fail(:not_found_in_database) unless resource
+        if resource.otp_required_for_login
+          return fail(:invalid_otp) if skip?
 
-        # We want to cascade to the next strategy if this one fails,
-        # but database authenticatable automatically halts on a bad password
-        @halted = false if @result == :failure
+          unless validate(resource){ valid_otp?(resource) }
+            return fail!(:invalid_otp)
+          end
+        end
+
+        remember_me(resource)
+        resource.after_database_authentication
+        success!(resource)
+
+        mapping.to.new.password = password if !hashed && Devise.paranoid
       end
 
-      def validate_otp(resource)
-        return true unless resource.otp_required_for_login
-        return if params[scope]['otp_attempt'].nil?
+      private
+
+      def skip?
+        params[scope].key?('otp_backup')
+      end
+
+      def valid_otp?(resource)
+        return false if params[scope]['otp_attempt'].nil?
         resource.validate_and_consume_otp!(params[scope]['otp_attempt'])
       end
     end
