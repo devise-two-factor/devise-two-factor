@@ -19,7 +19,7 @@ module Devise
         end
 
         attr_accessor :otp_attempt
-        validate :validate_otp, if: ->{ otp_attempt.present?}
+        validate :validate_otp, if: ->{ otp_attempt.present? && otp_required_for_login }
 
       end
 
@@ -89,7 +89,7 @@ module Devise
       def validate_otp
         self.errors.add(:otp_attempt, :invalid) unless validate_and_consume_otp!(otp_attempt)
       end
-      
+
     end
   end
 end
