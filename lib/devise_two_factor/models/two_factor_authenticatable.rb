@@ -19,6 +19,8 @@ module Devise
         end
 
         attr_accessor :otp_attempt
+        validate :validate_otp, if: ->{ otp_attempt.present?}
+
       end
 
       def self.required_fields(klass)
@@ -81,6 +83,13 @@ module Devise
           ROTP::Base32.random_base32(otp_secret_length)
         end
       end
+
+      private
+
+      def validate_otp
+        self.errors.add(:otp_attempt, :invalid) unless validate_and_consume_otp!(otp_attempt)
+      end
+      
     end
   end
 end
