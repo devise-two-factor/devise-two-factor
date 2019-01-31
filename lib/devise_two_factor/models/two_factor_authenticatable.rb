@@ -28,6 +28,35 @@ module Devise
         [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep]
       end
 
+      def update_with_otp(params)
+        current_otp = params.delete(:otp_attempt).to_s
+        if(self.otp_required_for_login?)
+          if(valid_otp?(current_otp))
+            update(params) && validate_and_consume_otp!(current_otp)
+          else
+            assign_attributes(params)
+            valid?
+            errors.add(:otp_attempt, :already_consumed) if already_consumed?
+            errors.add(:otp_attempt, current_otp.blank? ? :blank : :invalid)
+            false
+          end
+        else
+          return update(params)
+        end
+      end
+
+
+
+      def valid_otp?(otp)
+
+        totp = self.otp(otp_secret)
+        !already_consumed? && totp.verify_with_drift(otp, self.class.otp_allowed_drift)
+      end
+
+      def already_consumed?
+        self.consumed_timestep == current_otp_timestep
+      end
+
       # This defaults to the model's otp_secret
       # If this hasn't been generated yet, pass a secret as an option
       def validate_and_consume_otp!(code, options = {})
@@ -65,16 +94,17 @@ module Devise
         self.otp_attempt = nil
       end
 
+
+
     protected
 
       # An OTP cannot be used more than once in a given timestep
       # Storing timestep of last valid OTP is sufficient to satisfy this requirement
       def consume_otp!
-        if self.consumed_timestep != current_otp_timestep
+        unless already_consumed?
           self.consumed_timestep = current_otp_timestep
           return save(validate: false)
         end
-
         false
       end
 
@@ -87,6 +117,8 @@ module Devise
           ROTP::Base32.random_base32(otp_secret_length)
         end
       end
+
+
     end
   end
 end
