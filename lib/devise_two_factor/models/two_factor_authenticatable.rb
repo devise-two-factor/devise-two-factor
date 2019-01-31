@@ -45,10 +45,25 @@ module Devise
         end
       end
 
-
+      def update_with_otp_and_password(params)
+        otp_attempt = params.delete(:otp_attempt).to_s
+        if(self.otp_required_for_login?)
+          if(valid_otp?(otp_attempt))
+            update_with_password(params) && validate_and_consume_otp!(otp_attempt)
+          else
+            params.delete(:current_password)
+            assign_attributes(params)
+            valid?
+            errors.add(:otp_attempt, :already_consumed) if already_consumed?
+            errors.add(:otp_attempt, otp_attempt.blank? ? :blank : :invalid)
+            false
+          end
+        else
+          return update_with_password(params)
+        end
+      end
 
       def valid_otp?(otp)
-
         totp = self.otp(otp_secret)
         !already_consumed? && totp.verify_with_drift(otp, self.class.otp_allowed_drift)
       end
