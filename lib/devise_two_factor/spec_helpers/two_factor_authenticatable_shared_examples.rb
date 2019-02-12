@@ -6,6 +6,13 @@ RSpec.shared_examples 'two_factor_authenticatable' do
     subject.consumed_timestep = nil
   end
 
+  describe 'required_fields' do
+    it 'has the fields for otp_backup_codes' do
+      expect(Devise::Models::TwoFactorBackupable.required_fields(subject.class)).to contain_exactly(:otp_secret, :consumed_timestep)
+    end
+  end
+
+
   describe '#otp_secret' do
     it 'should be of the configured length' do
       expect(subject.otp_secret.length).to eq(subject.class.otp_secret_length)
