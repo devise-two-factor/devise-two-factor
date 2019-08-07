@@ -2,7 +2,7 @@ sudo: false
 language: ruby
 cache: bundler
 before_install:
-  - gem update --system
+  - gem i rubygems-update -v '<3' && update_rubygems
   - gem update bundler
 gemfile:
   - Gemfile
@@ -11,12 +11,15 @@ gemfile:
   - gemfiles/rails_5_0.gemfile
   - gemfiles/rails_5_1.gemfile
   - gemfiles/rails_5_2.gemfile
+  - gemfiles/rails_6_0.gemfile
 rvm:
   - "2.1"
   - "2.2"
   - "2.3.4"
   - "2.4.0"
   - "2.4.1"
+  - "2.5"
+  - "2.6"
 matrix:
   exclude:
     - rvm: "2.1"
@@ -31,3 +34,13 @@ matrix:
       gemfile: gemfiles/rails_5_2.gemfile
     - rvm: "2.2"
       gemfile: gemfiles/rails_5_2.gemfile
+    - rvm: "2.1"
+      gemfile: gemfiles/rails_6_0.gemfile
+    - rvm: "2.2"
+      gemfile: gemfiles/rails_6_0.gemfile
+    - rvm: "2.3.4"
+      gemfile: gemfiles/rails_6_0.gemfile
+    - rvm: "2.4.0"
+      gemfile: gemfiles/rails_6_0.gemfile
+    - rvm: "2.4.1"
+      gemfile: gemfiles/rails_6_0.gemfile
