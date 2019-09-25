@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 3.1.0
+- Add Rails 6.0 support
+- New gem signing certificate
+
+## 3.0.3
+- Add Rails 5.2 support
+- Fix paranoid-mode being ignored
+
 ## 3.0.2
 - Add Rails 5.1 support
 
