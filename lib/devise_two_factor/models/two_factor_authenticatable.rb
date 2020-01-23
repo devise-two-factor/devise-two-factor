@@ -1,4 +1,3 @@
-require 'attr_encrypted'
 require 'rotp'
 
 module Devise
@@ -8,14 +7,18 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        unless singleton_class.ancestors.include?(AttrEncrypted)
-          extend AttrEncrypted
-        end
+        unless %i[otp_secret otp_secret=].all? { |attr| respond_to?(attr) }
+          require 'attr_encrypted'
 
-        unless attr_encrypted?(:otp_secret)
-          attr_encrypted :otp_secret,
-            :key  => self.otp_secret_encryption_key,
-            :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
+          unless singleton_class.ancestors.include?(AttrEncrypted)
+            extend AttrEncrypted
+          end
+
+          unless attr_encrypted?(:otp_secret)
+            attr_encrypted :otp_secret,
+              :key  => self.otp_secret_encryption_key,
+              :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
+          end
         end
 
         attr_accessor :otp_attempt
