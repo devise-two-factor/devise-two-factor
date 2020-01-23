@@ -7,7 +7,7 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        unless %i[otp_secret otp_secret=].all? { |attr| respond_to?(attr) }
+        unless %i[otp_secret otp_secret=].all? { |attr| method_defined?(attr) }
           require 'attr_encrypted'
 
           unless singleton_class.ancestors.include?(AttrEncrypted)
