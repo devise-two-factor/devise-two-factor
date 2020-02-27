@@ -15,4 +15,4 @@ gem 'turbolinks'
 
 gem 'devise'
 gem 'devise-two-factor', path: '../'
-gem 'rqrcode-rails3'
+gem 'rqrcode'

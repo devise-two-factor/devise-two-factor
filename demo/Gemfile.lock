@@ -126,8 +126,6 @@ GEM
     rqrcode (1.1.2)
       chunky_png (~> 1.0)
       rqrcode_core (~> 0.1)
-    rqrcode-rails3 (0.1.7)
-      rqrcode (>= 0.4.2)
     rqrcode_core (0.1.1)
     sass (3.2.19)
     sass-rails (4.0.5)
@@ -169,7 +167,7 @@ DEPENDENCIES
   devise-two-factor!
   jquery-rails
   rails (= 4.2.11)
-  rqrcode-rails3
+  rqrcode
   sass-rails (~> 4.0.3)
   sqlite3 (~> 1.3.6)
   turbolinks
