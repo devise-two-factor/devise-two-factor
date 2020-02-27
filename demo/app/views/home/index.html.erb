@@ -10,10 +10,18 @@
 
   <% if current_user.otp_required_for_login %>
     <%= button_to "Disable 2FA", users_disable_otp_path, :method => :post %>
-    <%= raw RQRCode::render_qrcode(current_user.otp_provisioning_uri(current_user.email, issuer: "Devise-Two-Factor-Demo"),
-                                   :svg,
-                                   :level => :l,
-                                   :unit => 2) %>
+
+    <br />
+    <% code = current_user.otp_provisioning_uri(current_user.email, issuer: "Devise-Two-Factor-Demo") %>
+    <%= RQRCode::QRCode.new(code).as_svg(module_size: 4).html_safe %>
+
+    <br />
+    <p>
+      DEBUG INFO:
+    </p>
+    CODE: <%= code %><br />
+    SECRET: <%= current_user.otp_secret %><br />
+
     <br>
   <% end %>
   <%= link_to "Log out", destroy_user_session_path, :method => :delete %>
