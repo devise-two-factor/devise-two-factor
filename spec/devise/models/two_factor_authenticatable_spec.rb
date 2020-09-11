@@ -77,3 +77,23 @@ describe ::Devise::Models::TwoFactorAuthenticatable do
     end
   end
 end
+
+describe ::Devise::Models::TwoFactorAuthenticatable do
+  context 'When clean_up_passwords is called ' do
+    subject { TwoFactorAuthenticatableDouble.new }
+    before :each do
+      subject.otp_attempt = 'foo'
+      subject.password_confirmation = 'foo'
+    end
+    it 'otp_attempt should be nill' do 
+      subject.clean_up_passwords
+      expect(subject.otp_attempt).to be_nil
+    end
+    it 'password_confirmation should be nill' do 
+      subject.clean_up_passwords
+      expect(subject.password_confirmation).to be_nil
+    end
+  end
+end
+
+
