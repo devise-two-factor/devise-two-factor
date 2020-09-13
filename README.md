@@ -142,7 +142,13 @@ If you instead to decide to send the one-time password to the user directly, suc
 current_user.current_otp
 ```
 
-The generated code will be valid for the duration specified by `otp_allowed_drift`.
+The generated code will be valid for the duration specified by `otp_allowed_drift`. This value can be modified by adding a config in `config/initializers/devise.rb`.
+```ruby
+Devise.otp_allowed_drift = 240 # value in seconds
+Devise.setup do |config|
+...
+end
+```
 
 However you decide to handle enrollment, there are a few important considerations to be made:
 
