@@ -32,12 +32,12 @@ RSpec.shared_examples 'two_factor_authenticatable' do
     let(:otp_secret) { '2z6hxkdwi3uvrnpn' }
 
     before :each do
-      Timecop.freeze(Time.current)
+      travel_to(Time.now)
       subject.otp_secret = otp_secret
     end
 
     after :each do
-      Timecop.return
+      travel_back
     end
 
     context 'with a stored consumed_timestep' do

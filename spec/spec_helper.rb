@@ -19,14 +19,15 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'rspec'
 require 'faker'
-require 'timecop'
 require 'devise-two-factor'
 require 'devise_two_factor/spec_helpers'
+require 'active_support/testing/time_helpers'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
+  config.include ActiveSupport::Testing::TimeHelpers
   config.order = 'random'
 end
