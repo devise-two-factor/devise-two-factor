@@ -9,12 +9,6 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          name: Restore bundle cache
-          keys:
-            - devise-two-factor-{{ checksum "Gemfile.lock" }}
-            - devise-two-factor-
-
       - run:
           name: Install latest bundler
           command: gem install bundler
@@ -26,12 +20,6 @@ jobs:
       - run:
           name: Bundle Install
           command: bundle install
-
-      - save_cache:
-          name: Store bundle cache
-          key: devise-two-factor-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
 
       - run:
           name: Run bundle-audit
