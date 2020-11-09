@@ -14,12 +14,12 @@ jobs:
           command: gem install bundler
 
       - run:
-          name: Update bundler
-          command: bundle update --bundler
-
-      - run:
           name: Bundle Install
           command: bundle install
+
+      - run:
+          name: Update bundler
+          command: bundle update --bundler
 
       - run:
           name: Run bundle-audit
