@@ -22,11 +22,6 @@ jobs:
           command: bundle update --bundler
 
       - run:
-          name: Run bundle-audit
-          command: |
-            bundle exec bundle-audit check --update
-
-      - run:
           name: Run rspec tests
           command: |
             bundle exec rspec \
