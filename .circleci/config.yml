@@ -1,0 +1,47 @@
+version: 2
+jobs:
+  build:
+    parallelism: 1
+    working_directory: ~/devise-two-factor
+    docker:
+      - image: circleci/ruby:2.7.1
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install latest bundler
+          command: gem install bundler
+
+      - run:
+          name: Update bundler
+          command: bundle update --bundler
+
+      - run:
+          name: Bundle Install
+          command: bundle install
+
+      - run:
+          name: Run bundle-audit
+          command: |
+            bundle exec bundle-audit check --update
+
+      - run:
+          name: Run rspec tests
+          command: |
+            bundle exec rspec \
+              --profile 10 \
+              --format RspecJunitFormatter \
+              --out test_results/rspec.xml \
+              --format progress
+
+      - store_test_results:
+          path: test_results
+
+      - store_artifacts:
+          path: test_results
+          prefix: tests
+
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
