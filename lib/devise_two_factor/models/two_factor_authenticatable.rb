@@ -32,7 +32,7 @@ module Devise
         return false unless code.present? && otp_secret.present?
 
         totp = self.otp(otp_secret)
-        return consume_otp! if totp.verify_with_drift(code, self.class.otp_allowed_drift)
+        return consume_otp! if totp.verify(code, drift_ahead: self.class.otp_allowed_drift)
 
         false
       end
@@ -78,7 +78,7 @@ module Devise
                                     :otp_secret_encryption_key)
 
         def generate_otp_secret(otp_secret_length = self.otp_secret_length)
-          ROTP::Base32.random_base32(otp_secret_length)
+          ROTP::Base32.random(otp_secret_length * 5/8)
         end
       end
     end
