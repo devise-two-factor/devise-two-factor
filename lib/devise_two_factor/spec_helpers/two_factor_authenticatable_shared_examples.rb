@@ -1,3 +1,5 @@
+require 'cgi'
+
 RSpec.shared_examples 'two_factor_authenticatable' do
   before :each do
     subject.otp_secret = subject.class.generate_otp_secret
@@ -54,7 +56,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
       end
 
       context 'given a previously valid OTP within the allowed drift' do
-        let(:consumed_otp) { ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true) }
+        let(:consumed_otp) { ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift) }
 
         before do
           subject.validate_and_consume_otp!(consumed_otp)
@@ -77,17 +79,17 @@ RSpec.shared_examples 'two_factor_authenticatable' do
     end
 
     it 'validates an OTP within the allowed drift' do
-      otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift, true)
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift)
       expect(subject.validate_and_consume_otp!(otp)).to be true
     end
 
     it 'does not validate an OTP above the allowed drift' do
-      otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift * 2, true)
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift * 2)
       expect(subject.validate_and_consume_otp!(otp)).to be false
     end
 
     it 'does not validate an OTP below the allowed drift' do
-      otp = ROTP::TOTP.new(otp_secret).at(Time.now - subject.class.otp_allowed_drift * 2, true)
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now - subject.class.otp_allowed_drift * 2)
       expect(subject.validate_and_consume_otp!(otp)).to be false
     end
   end
@@ -95,15 +97,15 @@ RSpec.shared_examples 'two_factor_authenticatable' do
   describe '#otp_provisioning_uri' do
     let(:otp_secret_length) { subject.class.otp_secret_length }
     let(:account)           { Faker::Internet.email }
-    let(:issuer)            { "Tinfoil" }
+    let(:issuer)            { 'Tinfoil' }
 
-    it "should return uri with specified account" do
-      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{account}\?secret=\w{#{otp_secret_length}}})
+    it 'should return uri with specified account' do
+      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{CGI.escape(account)}\?secret=\w{#{otp_secret_length}}})
     end
 
     it 'should return uri with issuer option' do
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*issuer=#{issuer}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{CGI.escape(account)}\?.*secret=\w{#{otp_secret_length}}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{CGI.escape(account)}\?.*issuer=#{issuer}(&|$)})
     end
   end
 end
