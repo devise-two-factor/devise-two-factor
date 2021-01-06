@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 3.1.1
+- Add Rails 6.1 support
+
 ## 3.0.2
 - Add Rails 5.1 support
 
