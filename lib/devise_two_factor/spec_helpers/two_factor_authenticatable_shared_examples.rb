@@ -78,7 +78,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
     it 'validates an OTP within the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift)
-      expect(subject.validate_and_consume_otp!(otp)).to be true
+      expect(subject.validate_and_consume_otp!(otp)).to be false
     end
 
     it 'does not validate an OTP above the allowed drift' do
@@ -98,12 +98,12 @@ RSpec.shared_examples 'two_factor_authenticatable' do
     let(:issuer)            { "Tinfoil" }
 
     it "should return uri with specified account" do
-      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{account}\?secret=\w{#{otp_secret_length}}})
+      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{CGI.escape account}\?secret=\w{#{otp_secret_length}}})
     end
 
-    it 'should return uri with issuer option' do
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{account}\?.*issuer=#{issuer}(&|$)})
+    it 'should return uri with issuer option', :aggregate_failures do
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).
+        to match(%r{otpauth://totp/#{CGI.escape issuer}:#{CGI.escape account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
     end
   end
 end
