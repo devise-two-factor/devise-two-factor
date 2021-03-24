@@ -1,9 +1,9 @@
 # Devise-Two-Factor Authentication
-By [Tinfoil Security](https://www.tinfoilsecurity.com/). Interested in [working with us](https://www.tinfoilsecurity.com/jobs)? We're hiring!
+By [Tinfoil Security](https://www.tinfoilsecurity.com/) (acq. [Synopsys](https://www.synopsys.com/) 2020). Interested in [working with us](https://www.synopsys.com/careers.html)? We're hiring!
 
 [![Build Status](https://travis-ci.org/tinfoil/devise-two-factor.svg?branch=master)](https://travis-ci.org/tinfoil/devise-two-factor)
 
-Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication, through the [TOTP](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm) scheme. It:
+Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication, through the [TOTP](https://en.wikipedia.org/wiki/Time-based_One-Time_Password) scheme. It:
 
 * Allows you to incorporate two-factor authentication into your existing models
 * Is opinionated about security, so you don't have to be
@@ -53,7 +53,7 @@ This generator will add a few columns to the specified model:
 * consumed_timestep
 * otp_required_for_login
 
-It also adds the :two_factor_authenticatable directive to your model, and sets up your encryption key. If present, it will remove :database_authenticatable from the model, as the two strategies are incompatible. Lastly, the generator will add a Warden config block to your Devise initializer, which enables the strategies required for two-factor authentication.
+It also adds the `:two_factor_authenticatable` directive to your model, and sets up your encryption key. If present, it will remove `:database_authenticatable` from the model, as the two strategies are incompatible. Lastly, the generator will add a Warden config block to your Devise initializer, which enables the strategies required for two-factor authentication.
 
 If you're running Rails 3, or do not have strong parameters enabled, the generator will also setup the required mass-assignment security options in your model.
 
@@ -85,7 +85,7 @@ def configure_permitted_parameters
 end
 ```
 
-**After running the generator, verify that :database_authenticatable is not being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. Loading both :database_authenticatable and `:two_factor_authenticatable` in a model will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies.**
+**After running the generator, verify that `:database_authenticatable` is not being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. Loading both `:database_authenticatable` and `:two_factor_authenticatable` in a model will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies.**
 
 ## Designing Your Workflow
 Devise-Two-Factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is important to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
@@ -95,7 +95,7 @@ There are two key workflows you'll have to think about:
 1. Logging in with two-factor authentication
 2. Enabling two-factor authentication for a given user
 
-We chose to keep things as simple as possible, and our implementation can be found by registering at [Tinfoil Security](https://tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
+We chose to keep things as simple as possible, and our implementation can be found by registering at [Tinfoil Security](https://www.tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
 
 
 ### Logging In
@@ -108,7 +108,7 @@ Logging in with two-factor authentication works extremely similarly to regular d
 These parameters can be submitted to the standard Devise login route, and the strategy will handle the authentication of the user for you.
 
 ### Disabling Automatic Login After Password Resets
-If you use the Devise ```recoverable``` strategy, the default behavior after a password reset is to automatically authenticate the user and log them in. This is obviously a problem if a user has two-factor authentication enabled, as resetting the password would get around the two-factor requirement.
+If you use the Devise `recoverable` strategy, the default behavior after a password reset is to automatically authenticate the user and log them in. This is obviously a problem if a user has two-factor authentication enabled, as resetting the password would get around the two-factor requirement.
 
 Because of this, you need to set `sign_in_after_reset_password` to `false` (either globally in your Devise initializer or via `devise_for`).
 
