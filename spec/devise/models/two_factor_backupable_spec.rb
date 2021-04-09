@@ -1,10 +1,12 @@
 require 'spec_helper'
 require 'active_model'
 
-class TwoFactorBackupableDouble
-  extend ::ActiveModel::Callbacks
-  include ::ActiveModel::Validations::Callbacks
-  extend  ::Devise::Models
+ActiveRecord::Base.connection.create_table :two_factor_backupable_doubles, force: true do |t|
+  t.string :otp_secret
+end
+
+class TwoFactorBackupableDouble < ActiveRecord::Base
+  extend ::Devise::Models
 
   define_model_callbacks :update
 
