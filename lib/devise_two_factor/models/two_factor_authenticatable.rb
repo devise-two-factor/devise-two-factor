@@ -1,3 +1,4 @@
+
 require 'rotp'
 
 module Devise
@@ -7,25 +8,13 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        unless %i[otp_secret otp_secret=].all? { |attr| method_defined?(attr) }
-          require 'attr_encrypted'
-
-          unless singleton_class.ancestors.include?(AttrEncrypted)
-            extend AttrEncrypted
-          end
-
-          unless attr_encrypted?(:otp_secret)
-            attr_encrypted :otp_secret,
-              :key  => self.otp_secret_encryption_key,
-              :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
-          end
-        end
-
         attr_accessor :otp_attempt
+
+        encrypts :otp_secret, **two_factor_otp_secret_encrypts_options
       end
 
       def self.required_fields(klass)
-        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep]
+        [:otp_secret, :consumed_timestep]
       end
 
       # This defaults to the model's otp_secret
@@ -87,10 +76,19 @@ module Devise
       module ClassMethods
         Devise::Models.config(self, :otp_secret_length,
                                     :otp_allowed_drift,
-                                    :otp_secret_encryption_key)
+                                    :otp_secret_encryption_key,
+                                    :otp_secret_encryption_options)
 
         def generate_otp_secret(otp_secret_length = self.otp_secret_length)
           ROTP::Base32.random_base32(otp_secret_length)
+        end
+
+        def two_factor_otp_secret_encrypts_options
+          if otp_secret_encryption_key.present?
+            { key: otp_secret_encryption_key }
+          else
+            otp_secret_encryption_options
+          end
         end
       end
     end

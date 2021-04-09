@@ -1,3 +1,5 @@
+require 'rails'
+require 'active_record'
 require 'simplecov'
 
 module SimpleCov::Configuration
@@ -28,4 +30,22 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
   config.order = 'random'
+  config.filter_run_when_matching :focus
 end
+
+Rails.logger = ActiveRecord::Base.logger = ActiveSupport::Logger.new("debug.log", 0, 100 * 1024 * 1024)
+
+ActiveRecord::Base.configurations = {
+  devise_two_factor_unit: {
+    adapter: 'sqlite3',
+    database: ':memory:'
+  }
+}
+
+ActiveRecord::Encryption.configure(
+  primary_key: 'test master key',
+  deterministic_key: 'test deterministic key',
+  key_derivation_salt: 'testing key derivation salt'
+)
+
+ActiveRecord::Base.establish_connection :devise_two_factor_unit

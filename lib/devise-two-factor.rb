@@ -16,6 +16,10 @@ module Devise
   mattr_accessor :otp_secret_encryption_key
   @@otp_secret_encryption_key = nil
 
+  # The options used to encrypt OTP secrets in the database
+  mattr_accessor :otp_secret_encryption_options
+  @@otp_secret_encryption_options = {}
+
   # The length of all generated OTP backup codes
   mattr_accessor :otp_backup_code_length
   @@otp_backup_code_length = 16
