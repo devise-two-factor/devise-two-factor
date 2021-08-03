@@ -33,6 +33,7 @@ module Devise
       # iff that code is a valid backup code.
       def invalidate_otp_backup_code!(code)
         codes = self.otp_backup_codes || []
+        codes = eval(codes) if codes.is_a?(String)
 
         codes.each do |backup_code|
           next unless Devise::Encryptor.compare(self.class, backup_code, code)
