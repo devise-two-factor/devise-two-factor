@@ -9,6 +9,8 @@ module Devise
         # 2. The password is correct, and OTP is not required for login
         # We check the OTP, then defer to DatabaseAuthenticatable
         if validate(resource) { validate_otp(resource) }
+          resource.failed_attempts -= 1
+          resource.save!
           super
         end
 

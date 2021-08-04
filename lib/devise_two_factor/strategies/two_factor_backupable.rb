@@ -8,6 +8,7 @@ module Devise
         if validate(resource) { resource.invalidate_otp_backup_code!(params[scope]['otp_attempt']) }
           # Devise fails to authenticate invalidated resources, but if we've
           # gotten here, the object changed (Since we deleted a recovery code)
+          resource.failed_attempts -= 1
           resource.save!
           super
         end
