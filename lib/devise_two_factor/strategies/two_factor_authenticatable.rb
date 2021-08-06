@@ -9,8 +9,7 @@ module Devise
         # 2. The password is correct, and OTP is not required for login
         # We check the OTP, then defer to DatabaseAuthenticatable
         if validate(resource) { validate_otp(resource) }
-          resource.failed_attempts -= 1
-          resource.save!
+          resource.update_column(:failed_attempts, resource.failed_attempts - 1) if otp_authentication_present_for?(resource)
           super
         end
 
@@ -25,6 +24,10 @@ module Devise
         return true unless resource.otp_required_for_login
         return if params[scope]['otp_attempt'].nil?
         resource.validate_and_consume_otp!(params[scope]['otp_attempt'])
+      end
+
+      def otp_authentication_present_for?(resource)
+        resource.otp.present? && resource.otp_required_for_login? && resource.otp_secret.present?
       end
     end
   end
