@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## Unreleased
+- Convert CI from Travis CI to Github Actions
 
 ## 4.0.0
 - Update ROTP
