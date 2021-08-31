@@ -4,6 +4,7 @@
 - Convert CI from Travis CI to Github Actions
 
 ## 4.0.0
+- [breaking] Drop support for Ruby <= 2.2
 - Update ROTP
 - Add Rails 6.1 support
 - Remove timecop dependency
