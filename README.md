@@ -1,7 +1,7 @@
 # Devise-Two-Factor Authentication
 By [Tinfoil Security](https://www.tinfoilsecurity.com/) (acq. [Synopsys](https://www.synopsys.com/) 2020). Interested in [working with us](https://www.synopsys.com/careers.html)? We're hiring!
 
-[![Build Status](https://travis-ci.org/tinfoil/devise-two-factor.svg?branch=master)](https://travis-ci.org/tinfoil/devise-two-factor)
+![Build Status](https://github.com/github/docs/actions/workflows/ci.yml/badge.svg)
 
 Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication, through the [TOTP](https://en.wikipedia.org/wiki/Time-based_One-Time_Password) scheme. It:
 
@@ -238,4 +238,21 @@ require 'devise_two_factor/spec_helpers'
 
 it_behaves_like "two_factor_authenticatable"
 it_behaves_like "two_factor_backupable"
+```
+
+## Troubleshooting
+If you are using Rails 4.x and Ruby >= 2.7, you may get an error like
+
+```
+An error occurred while loading ./spec/devise/models/two_factor_authenticatable_spec.rb.
+Failure/Error: require 'devise'
+
+NoMethodError:
+  undefined method `new' for BigDecimal:Class
+```
+see https://github.com/ruby/bigdecimal#which-version-should-you-select and https://github.com/ruby/bigdecimal/issues/127
+for more details, but you should be able to solve this
+by explicitly requiring an older version of bigdecimal in your gemfile like
+```
+gem "bigdecimal", "~> 1.4"
 ```
