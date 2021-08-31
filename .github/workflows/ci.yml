@@ -12,12 +12,11 @@ jobs:
       fail-fast: false
       matrix:
         # Due to https://github.com/actions/runner/issues/849, we should quote versions
-        ruby: ['2.3.4', '2.4.0', '2.4.1', '2.5', '2.6']
+        ruby: ['2.3', '2.4', '2.5', '2.6']
         rails: ['4.1', '4.2', '5.0', '5.1', '5.2', '6.0']
         exclude:
-          - {ruby: '2.3.4', rails: '6.0'}
-          - {ruby: '2.4.0', rails: '6.0'}
-          - {ruby: '2.4.1', rails: '6.0'}
+          - {ruby: '2.3', rails: '6.0'}
+          - {ruby: '2.4', rails: '6.0'}
 
     name: Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
