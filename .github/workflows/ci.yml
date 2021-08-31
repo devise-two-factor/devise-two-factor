@@ -19,6 +19,10 @@ jobs:
           - {ruby: '2.3', rails: '6.1'}
           - {ruby: '2.4', rails: '6.0'}
           - {ruby: '2.4', rails: '6.1'}
+          - {ruby: '2.7', rails: '4.1'}
+          - {ruby: '2.7', rails: '4.2'}
+          - {ruby: '3.0', rails: '4.1'}
+          - {ruby: '3.0', rails: '4.2'}
 
     name: Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps

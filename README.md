@@ -239,3 +239,20 @@ require 'devise_two_factor/spec_helpers'
 it_behaves_like "two_factor_authenticatable"
 it_behaves_like "two_factor_backupable"
 ```
+
+## Troubleshooting
+If you are using Rails 4.x and Ruby >= 2.7, you may get an error like
+
+```
+An error occurred while loading ./spec/devise/models/two_factor_authenticatable_spec.rb.
+Failure/Error: require 'devise'
+
+NoMethodError:
+  undefined method `new' for BigDecimal:Class
+```
+see https://github.com/ruby/bigdecimal#which-version-should-you-select and https://github.com/ruby/bigdecimal/issues/127
+for more details, but you should be able to solve this
+by explicitly requiring an older version of bigdecimal in your gemfile like
+```
+gem "bigdecimal", "~> 1.4"
+```
