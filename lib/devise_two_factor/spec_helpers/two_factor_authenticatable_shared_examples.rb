@@ -73,6 +73,11 @@ RSpec.shared_examples 'two_factor_authenticatable' do
       expect(subject.validate_and_consume_otp!(otp)).to be true
     end
 
+    it 'validates a precisely correct OTP with whitespace' do
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now)
+      expect(subject.validate_and_consume_otp!(otp.split("").join(" "))).to be true
+    end
+
     it 'fails a nil OTP value' do
       otp = nil
       expect(subject.validate_and_consume_otp!(otp)).to be false
