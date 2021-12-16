@@ -13,18 +13,22 @@ jobs:
       matrix:
         # Due to https://github.com/actions/runner/issues/849, we should quote versions
         ruby: ['2.3', '2.4', '2.5', '2.6', '2.7', '3.0', 'truffleruby-head']
-        rails: ['4.1', '4.2', '5.0', '5.1', '5.2', '6.0', '6.1']
+        rails: ['4.1', '4.2', '5.0', '5.1', '5.2', '6.0', '6.1', '7.0']
         exclude:
-          - {ruby: '2.3', rails: '6.0'}
-          - {ruby: '2.3', rails: '6.1'}
-          - {ruby: '2.4', rails: '6.0'}
-          - {ruby: '2.4', rails: '6.1'}
-          - {ruby: '2.7', rails: '4.1'}
-          - {ruby: '2.7', rails: '4.2'}
-          - {ruby: '3.0', rails: '4.1'}
-          - {ruby: '3.0', rails: '4.2'}
-          - {ruby: 'truffleruby-head', rails: '4.1'}
-          - {ruby: 'truffleruby-head', rails: '4.2'}          
+          - { ruby: '2.3', rails: '7.0' }
+          - { ruby: '2.4', rails: '7.0' }
+          - { ruby: '2.5', rails: '7.0' }
+          - { ruby: '2.6', rails: '7.0' }
+          - { ruby: '2.3', rails: '6.0' }
+          - { ruby: '2.3', rails: '6.1' }
+          - { ruby: '2.4', rails: '6.0' }
+          - { ruby: '2.4', rails: '6.1' }
+          - { ruby: '2.7', rails: '4.1' }
+          - { ruby: '2.7', rails: '4.2' }
+          - { ruby: '3.0', rails: '4.1' }
+          - { ruby: '3.0', rails: '4.2' }
+          - { ruby: 'truffleruby-head', rails: '4.1' }
+          - { ruby: 'truffleruby-head', rails: '4.2' }
 
     name: Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
