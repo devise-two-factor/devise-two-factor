@@ -32,3 +32,8 @@ appraise "rails-6.1" do
   gem 'railties', '~> 6.1'
   gem 'activesupport', '~> 6.1'
 end
+
+appraise "rails-7.0" do
+  gem 'railties', '~> 7.0'
+  gem 'activesupport', '~> 7.0'
+end
