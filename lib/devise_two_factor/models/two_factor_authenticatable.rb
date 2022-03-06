@@ -28,6 +28,7 @@ module Devise
       #
       def legacy_otp_secret
         return nil unless self[:encrypted_otp_secret]
+        return nil unless self.class.otp_secret_encryption_key
 
         hmac_iterations = 2000 # a default set by the Encryptor gem
         key = self.class.otp_secret_encryption_key
