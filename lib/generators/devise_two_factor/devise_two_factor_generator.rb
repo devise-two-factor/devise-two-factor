@@ -51,8 +51,7 @@ module DeviseTwoFactor
         indent_depth = class_path.size
 
         content = [
-                    "devise :two_factor_authenticatable,",
-                    "       :otp_secret_encryption_key => ENV['#{encryption_key_env}']\n"
+                    "devise :two_factor_authenticatable"
                   ]
 
         content << "attr_accessible :otp_attempt\n" if needs_attr_accessible?

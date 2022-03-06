@@ -32,6 +32,10 @@ gem 'devise-two-factor'
 Next, since Devise-Two-Factor encrypts its secrets before storing them in the database, you'll need to generate an encryption key, and store it in an environment variable of your choice. Set the encryption key in the model that uses Devise:
 
 ```ruby
+  # new apps on rails 7+
+  devise :two_factor_authenticatable
+
+  # apps upgrading from Rails 6 or older
   devise :two_factor_authenticatable,
          :otp_secret_encryption_key => ENV['YOUR_ENCRYPTION_KEY_HERE']
 
