@@ -35,7 +35,7 @@ module Devise
         return false unless code.present? && otp_secret.present?
 
         totp = otp(otp_secret)
-        if totp.verify(code, drift_behind: self.class.otp_allowed_drift, drift_ahead: self.class.otp_allowed_drift)
+        if totp.verify(code.gsub(/\s+/, ""), drift_behind: self.class.otp_allowed_drift, drift_ahead: self.class.otp_allowed_drift)
           return consume_otp!
         end
 

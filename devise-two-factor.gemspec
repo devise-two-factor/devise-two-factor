@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']
 
-  s.add_runtime_dependency 'railties',       '< 6.2'
-  s.add_runtime_dependency 'activesupport',  '< 6.2'
+  s.add_runtime_dependency 'railties',       '< 7.1'
+  s.add_runtime_dependency 'activesupport',  '< 7.1'
   if RUBY_VERSION >= '2.2'
     s.add_runtime_dependency 'attr_encrypted', '~> 3.1.0'
   else

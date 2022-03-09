@@ -1,7 +1,12 @@
 # CHANGELOG
 
 ## Unreleased
-- Convert CI from Travis CI to Github Actions
+
+## 4.0.1
+- Convert CI from Travis CI to Github Actions ([#198](https://github.com/tinfoil/devise-two-factor/pull/198))
+- Fix ActiveSupport::Testing::TimeHelpers require in shared examples ([#191](https://github.com/tinfoil/devise-two-factor/pull/191))
+- Accept whitespace in provided codes ([#195](https://github.com/tinfoil/devise-two-factor/pull/195))
+- Add Truffleruby head to CI ([#200](https://github.com/tinfoil/devise-two-factor/pull/200))
 
 ## 4.0.0
 - [breaking] Drop support for Ruby <= 2.2
