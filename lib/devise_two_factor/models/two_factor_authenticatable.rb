@@ -101,7 +101,13 @@ module Devise
         return false unless code.present? && otp_secret.present?
 
         totp = otp(otp_secret)
-        if totp.verify(code.gsub(/\s+/, ""), drift_behind: self.class.otp_allowed_drift, drift_ahead: self.class.otp_allowed_drift)
+
+        if self.consumed_timestep
+          # reconstruct the timestamp of the last consumed timestep
+          after_timestamp = self.consumed_timestep * otp.interval
+        end
+
+        if totp.verify(code.gsub(/\s+/, ""), drift_behind: self.class.otp_allowed_drift, drift_ahead: self.class.otp_allowed_drift, after: after_timestamp)
           return consume_otp!
         end
 

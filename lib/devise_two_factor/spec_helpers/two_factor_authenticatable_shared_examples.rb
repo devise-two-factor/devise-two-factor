@@ -54,6 +54,42 @@ RSpec.shared_examples 'two_factor_authenticatable' do
           expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
         end
       end
+
+      context 'given a valid OTP used multiple times within the allowed drift' do
+        let(:consumed_otp) { ROTP::TOTP.new(otp_secret).at(Time.now) }
+
+        before do
+          subject.validate_and_consume_otp!(consumed_otp)
+        end
+
+        context 'after the otp interval' do
+          before do
+            travel_to(subject.otp.interval.seconds.from_now)
+          end
+
+          it 'fails to validate' do
+            expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
+          end
+        end
+      end
+
+      context 'given a valid OTP used multiple times within the allowed drift after a subsequent login' do
+        let(:consumed_otp) { ROTP::TOTP.new(otp_secret).at(Time.now - subject.class.otp_allowed_drift) }
+
+        before do
+          travel_to(subject.class.otp_allowed_drift.seconds.ago)
+          subject.validate_and_consume_otp!(consumed_otp)
+        end
+
+        context 'after the otp interval' do
+          it 'fails to validate' do
+            travel_to(subject.class.otp_allowed_drift.seconds.from_now)
+            next_otp = ROTP::TOTP.new(otp_secret).at(Time.now)
+            expect(subject.validate_and_consume_otp!(next_otp)).to be true
+            expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
+          end
+        end
+      end
     end
 
     it 'validates a precisely correct OTP' do
