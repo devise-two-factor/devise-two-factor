@@ -7,10 +7,7 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        unless %i[otp_secret otp_secret=].all? { |attr| method_defined?(attr) }
-          encrypts :otp_secret
-        end
-
+        encrypts :otp_secret, **splattable_encrypted_attr_options
         attr_accessor :otp_attempt
       end
 
@@ -153,10 +150,20 @@ module Devise
       module ClassMethods
         Devise::Models.config(self, :otp_secret_length,
                                     :otp_allowed_drift,
+                                    :otp_encrypted_attribute_options,
                                     :otp_secret_encryption_key)
 
         def generate_otp_secret(otp_secret_length = self.otp_secret_length)
           ROTP::Base32.random_base32(otp_secret_length)
+        end
+
+        # Return value will be splatted with ** so return a version of the
+        # encrypted attribute options which is always a Hash.
+        # @return [Hash]
+        def splattable_encrypted_attr_options
+          return {} if otp_encrypted_attribute_options.nil?
+
+          otp_encrypted_attribute_options
         end
       end
     end
