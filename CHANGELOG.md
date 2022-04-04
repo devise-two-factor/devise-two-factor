@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 4.0.2
+- Add Rails 7.0 support
+- Renew signing certificate
+- Use `after` option of TOTP#verify for additional timestamp verification
+
 ## 4.0.1
 - Convert CI from Travis CI to Github Actions ([#198](https://github.com/tinfoil/devise-two-factor/pull/198))
 - Fix ActiveSupport::Testing::TimeHelpers require in shared examples ([#191](https://github.com/tinfoil/devise-two-factor/pull/191))
