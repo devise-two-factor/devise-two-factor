@@ -33,17 +33,17 @@ Next, since Devise-Two-Factor encrypts its secrets before storing them in the da
 
 ```ruby
   devise :two_factor_authenticatable,
-         :otp_secret_encryption_key => ENV['YOUR_ENCRYPTION_KEY_HERE']
+         :otp_secret_encryption_key => ENV['YOUR_ENCRYPTION_KEY_ENVIRONMENT_VARIABLE']
 
 ```
 
 Finally, you can automate all of the required setup by simply running:
 
 ```ruby
-rails generate devise_two_factor MODEL ENVIRONMENT_VARIABLE
+rails generate devise_two_factor MODEL YOUR_ENCRYPTION_KEY_ENVIRONMENT_VARIABLE
 ```
 
-Where `MODEL` is the name of the model you wish to add two-factor functionality to (for example `user`), and `ENVIRONMENT_VARIABLE` is the name of the variable you're storing your encryption key in.
+Where `MODEL` is the name of the model you wish to add two-factor functionality to (for example `user`), and `YOUR_ENCRYPTION_KEY_ENVIRONMENT_VARIABLE` is the name of the variable you're storing your encryption key in.
 
 This generator will add a few columns to the specified model:
 
