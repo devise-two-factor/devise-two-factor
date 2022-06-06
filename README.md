@@ -1,24 +1,67 @@
+# Mirror
+
+This is a mirror of https://github.com/tinfoil/devise-two-factor
+
+The original gem had a dependency on ActiveRecord. This fork makes it compatible with Mongoid.
+
+The branch we maintain is `recognition`. The `main` branch is pulled from the github source.
+You can update the bonusly branch by pulling and rebasing and then publishing the new version.
+
+## Publishing
+
+To publish to our private gemserver you will first need to get the api key.
+
+The api key can be found in vault: https://vault.bonus.ly/ui/vault/secrets/kv/show/global/gemstash
+
+To set it correctly first check to see if you already have a file at `~/.gem/credentials` if you do
+you can skip to editing that file. If not follow these steps to create it:
+
+```shell
+$ mkdir -p ~/.gem
+$ touch ~/.gem/credentials
+$ chmod 0600 ~/.gem/credentials
+```
+
+Once you have a credentials file you will need to add the following line to it:
+
+```yaml
+---
+:private_gemserver_key: <API KEY GOES HERE>
+```
+
+Now that you have the credentials configured use the following command to push a new version to the private gemserver:
+
+```shell
+$ gem push --key private_gemserver_key --host https://rubygems.bonusly.dev/private pkg/bonusly-devise-two-factor-X.X.X.gem
+```
+
+# Original README Below
+
 # Devise-Two-Factor Authentication
+
 By [Tinfoil Security](https://www.tinfoilsecurity.com/) (acq. [Synopsys](https://www.synopsys.com/) 2020). Interested in [working with us](https://www.synopsys.com/careers.html)? We're hiring!
 
 ![Build Status](https://github.com/tinfoil/devise-two-factor/actions/workflows/ci.yml/badge.svg)
 
 Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication, through the [TOTP](https://en.wikipedia.org/wiki/Time-based_One-Time_Password) scheme. It:
 
-* Allows you to incorporate two-factor authentication into your existing models
-* Is opinionated about security, so you don't have to be
-* Integrates easily with two-factor applications like [Google Authenticator](https://support.google.com/accounts/answer/1066447?hl=en) and [Authy](https://authy.com/)
-* Is extensible, and includes two-factor backup codes as an example of how plugins can be structured
+- Allows you to incorporate two-factor authentication into your existing models
+- Is opinionated about security, so you don't have to be
+- Integrates easily with two-factor applications like [Google Authenticator](https://support.google.com/accounts/answer/1066447?hl=en) and [Authy](https://authy.com/)
+- Is extensible, and includes two-factor backup codes as an example of how plugins can be structured
 
 ## Contributing
+
 We welcome pull requests, bug reports, and other contributions. We're especially looking for help getting this gem fully compatible with Rails 5+ and squashing any deprecation messages.
 
 ## Example App
+
 An example Rails 4 application is provided in the `demo` directory. It showcases a minimal example of Devise-Two-Factor in action, and can act as a reference for integrating the gem into your own application.
 
 For the demo app to work, create an encryption key and store it as an environment variable. One way to do this is to create a file named `local_env.yml` in the application root. Set the value of `ENCRYPTION_KEY` in the YML file. That value will be loaded into the application environment by `application.rb`.
 
 ## Getting Started
+
 Devise-Two-Factor doesn't require much to get started, but there are a few prerequisites before you can start using it in your application.
 
 First, you'll need a Rails application setup with Devise. Visit the Devise [homepage](https://github.com/plataformatec/devise) for instructions.
@@ -47,11 +90,11 @@ Where `MODEL` is the name of the model you wish to add two-factor functionality 
 
 This generator will add a few columns to the specified model:
 
-* encrypted_otp_secret
-* encrypted_otp_secret_iv
-* encrypted_otp_secret_salt
-* consumed_timestep
-* otp_required_for_login
+- encrypted_otp_secret
+- encrypted_otp_secret_iv
+- encrypted_otp_secret_salt
+- consumed_timestep
+- otp_required_for_login
 
 Remember to apply the new migration.
 
@@ -94,6 +137,7 @@ end
 **After running the generator, verify that `:database_authenticatable` is not being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. Loading both `:database_authenticatable` and `:two_factor_authenticatable` in a model will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies.**
 
 ## Designing Your Workflow
+
 Devise-Two-Factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is important to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
 
 There are two key workflows you'll have to think about:
@@ -103,8 +147,8 @@ There are two key workflows you'll have to think about:
 
 We chose to keep things as simple as possible, and our implementation can be found by registering at [Tinfoil Security](https://www.tinfoilsecurity.com/), and enabling two-factor authentication from the [security settings page](https://www.tinfoilsecurity.com/account/security).
 
-
 ### Logging In
+
 Logging in with two-factor authentication works extremely similarly to regular database authentication in Devise. The `TwoFactorAuthenticatable` strategy accepts three parameters:
 
 1. email
@@ -114,11 +158,13 @@ Logging in with two-factor authentication works extremely similarly to regular d
 These parameters can be submitted to the standard Devise login route, and the strategy will handle the authentication of the user for you.
 
 ### Disabling Automatic Login After Password Resets
+
 If you use the Devise `recoverable` strategy, the default behavior after a password reset is to automatically authenticate the user and log them in. This is obviously a problem if a user has two-factor authentication enabled, as resetting the password would get around the two-factor requirement.
 
 Because of this, you need to set `sign_in_after_reset_password` to `false` (either globally in your Devise initializer or via `devise_for`).
 
 ### Enabling Two-Factor Authentication
+
 Enabling two-factor authentication for a user is easy. For example, if my user model were named User, I could do the following:
 
 ```ruby
@@ -149,6 +195,7 @@ current_user.current_otp
 ```
 
 The generated code will be valid for the duration specified by `otp_allowed_drift`. This value can be modified by adding a config in `config/initializers/devise.rb`.
+
 ```ruby
 Devise.otp_allowed_drift = 240 # value in seconds
 Devise.setup do |config|
@@ -158,13 +205,14 @@ end
 
 However you decide to handle enrollment, there are a few important considerations to be made:
 
-* Whether you'll force the use of two-factor authentication, and if so, how you'll migrate existing users to system, and what your on-boarding experience will look like
-* If you authenticate using SMS, you'll want to verify the user's ownership of the phone, in much the same way you're probably verifying their email address
-* How you'll handle device revocation in the event that a user loses access to their device, or that device is rendered temporarily unavailable (This gem includes `TwoFactorBackupable` as an example extension meant to solve this problem)
+- Whether you'll force the use of two-factor authentication, and if so, how you'll migrate existing users to system, and what your on-boarding experience will look like
+- If you authenticate using SMS, you'll want to verify the user's ownership of the phone, in much the same way you're probably verifying their email address
+- How you'll handle device revocation in the event that a user loses access to their device, or that device is rendered temporarily unavailable (This gem includes `TwoFactorBackupable` as an example extension meant to solve this problem)
 
 It sounds like a lot of work, but most of these problems have been very elegantly solved by other people. We recommend taking a look at the excellent workflows used by Heroku and Google for inspiration.
 
 ### Filtering sensitive parameters from the logs
+
 To prevent two-factor authentication codes from leaking if your application logs get breached, you'll want to filter sensitive parameters from the Rails logs. Add the following to `config/initializers/filter_parameter_logging.rb`:
 
 ```ruby
@@ -172,6 +220,7 @@ Rails.application.config.filter_parameters += [:otp_attempt]
 ```
 
 ## Backup Codes
+
 Devise-Two-Factor is designed with extensibility in mind. One such extension, `TwoFactorBackupable`, is included and serves as a good example of how to extend this gem. This plugin allows you to add the ability to generate single-use backup codes for a user, which they may use to bypass two-factor authentication, in the event that they lose access to their device.
 
 To install it, you need to add the `:two_factor_backupable` directive to your model.
@@ -215,6 +264,7 @@ devise :two_factor_backupable, otp_backup_code_length:     32,
 ```
 
 ### Help! I'm not using Rails 4.0!
+
 Don't worry! `TwoFactorBackupable` stores the backup codes as an array of strings in the database. In Rails 4.0 this is supported natively, but in earlier versions you can use a gem to emulate this behavior: we recommend [activerecord-postgres-array](https://github.com/tlconnor/activerecord-postgres-array).
 
 You'll then simply have to create a migration to add an array named `otp_backup_codes` to your model. If you use the above gem, this migration might look like:
@@ -231,6 +281,7 @@ end
 Now just continue with the setup in the previous section, skipping the generator step.
 
 ## Testing
+
 Devise-Two-Factor includes shared-examples for both `TwoFactorAuthenticatable` and `TwoFactorBackupable`. Adding the following two lines to the specs for your two-factor enabled models will allow you to test your models for two-factor functionality:
 
 ```ruby
@@ -241,6 +292,7 @@ it_behaves_like "two_factor_backupable"
 ```
 
 ## Troubleshooting
+
 If you are using Rails 4.x and Ruby >= 2.7, you may get an error like
 
 ```
@@ -250,9 +302,11 @@ Failure/Error: require 'devise'
 NoMethodError:
   undefined method `new' for BigDecimal:Class
 ```
+
 see https://github.com/ruby/bigdecimal#which-version-should-you-select and https://github.com/ruby/bigdecimal/issues/127
 for more details, but you should be able to solve this
 by explicitly requiring an older version of bigdecimal in your gemfile like
+
 ```
 gem "bigdecimal", "~> 1.4"
 ```
