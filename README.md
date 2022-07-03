@@ -70,7 +70,7 @@ This generator will:
     * remove the `:database_authenticatable` if present because it is incompatible with `:two_factor_authenticatable`
 1. Add a Warden config block to your Devise initializer, which enables the strategies required for two-factor authentication.
 
-Remember to apply the new migration after you run the generator
+Remember to apply the new migration after you run the generator:
 
 ```bash
 ./bin/rails db:migrate
@@ -92,11 +92,9 @@ Next you need to whitelist `:otp_attempt` as a permitted parameter in Devise `:s
   end
 ```
 
-Finally you should verify that `:database_authenticatable` is **not** being loaded by your model.
+Finally you should verify that `:database_authenticatable` is **not** being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail.
 
-The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail.
-
-**Loading both `:database_authenticatable` and `:two_factor_authenticatable` in a model is a security issue** It will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies
+**Loading both `:database_authenticatable` and `:two_factor_authenticatable` in a model is a security issue** It will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies!
 
 ## Designing Your Workflow
 Devise-Two-Factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is important to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
