@@ -22,10 +22,8 @@ For the demo app to work, create an encryption key and store it as an environmen
 
 Devise-Two-Factor doesn't require much to get started, but there are two prerequisites before you can start using it in your application:
 
-1. A Rails application with [devise]() installed
+1. A Rails application with [devise](https://github.com/heartcombo/devise) installed
 1. Secrets configured for ActiveRecord encrypted attributes
-
-============================ BEGIN NEW INSTALL =======
 
 First, you'll need a Rails application setup with Devise. Visit the Devise [homepage](https://github.com/plataformatec/devise) for instructions.
 
