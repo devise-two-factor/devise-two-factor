@@ -147,7 +147,7 @@ This gem must be upgraded **as part of a Rails 7 upgrade**. See [the official Ra
 
 You can now deploy your upgraded application and devise-two-factor should work as before.
 
-This gem will fall back to **reading** the OTP secret from the legacy columns if it cannot find one in the new `otp_secret` column. When you **write** a new OTP secret it will always be written to the new `otp_secret column.
+This gem will fall back to **reading** the OTP secret from the legacy columns if it cannot find one in the new `otp_secret` column. When you **write** a new OTP secret it will always be written to the new `otp_secret` column.
 
 #### Phase 2: Clean up
 

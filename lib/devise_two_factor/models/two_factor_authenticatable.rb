@@ -22,8 +22,6 @@ module Devise
       ##
       # Decrypt and return the `encrypted_otp_secret` attribute which was used in
       # prior versions of devise-two-factor
-      #
-      # You must implement #legacy_otp_secret in user model (e.g. 'User').
       # See: # https://github.com/tinfoil/devise-two-factor/blob/main/UPGRADING.md
       def legacy_otp_secret
         nil
