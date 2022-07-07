@@ -48,8 +48,8 @@ This gem must be upgraded **as part of a Rails 7 upgrade**. See [the official Ra
 
 1. Update the version constraint for Rails in your `Gemfile` to your desired version e.g. `gem "rails", "~> 7.0.3"`
 1. Run `bundle install` and resolve any issues with dependencies.
-1. Update the version constraint for `devise-two-factor in your `Gemfile` to the the latest version (must be at least 5.x e.g. `~> 5.0`
-1. Run `./bin/rails app:update as per the [Rails upgrade guide](https://guides.rubyonrails.org/upgrading_ruby_on_rails.html) and tweak the output as required for your app.
+1. Update the version constraint for `devise-two-factor` in your `Gemfile` to the the latest version (must be at least 5.x e.g. `~> 5.0`
+1. Run `./bin/rails app:update` as per the [Rails upgrade guide](https://guides.rubyonrails.org/upgrading_ruby_on_rails.html) and tweak the output as required for your app.
 1. Run `./bin/rails db:migrate` to update your DB based on the changes made by `app:update`
 1. Add a new `otp_secret` attribute to your user model
     ```bash
@@ -189,7 +189,7 @@ This "clean up" phase can happen at the same time as your initial deployment but
         remove_column :users, :encrypted_otp_secret_salt
       end
     end
-  ```
+    ```
 
 # Guide to upgrading from 2.x to 3.x
 
