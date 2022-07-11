@@ -7,25 +7,28 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        unless %i[otp_secret otp_secret=].all? { |attr| method_defined?(attr) }
-          require 'attr_encrypted'
-
-          unless singleton_class.ancestors.include?(AttrEncrypted)
-            extend AttrEncrypted
-          end
-
-          unless attr_encrypted?(:otp_secret)
-            attr_encrypted :otp_secret,
-              :key  => self.otp_secret_encryption_key,
-              :mode => :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_secret)
-          end
-        end
-
+        encrypts :otp_secret, **splattable_encrypted_attr_options
         attr_accessor :otp_attempt
       end
 
+      def otp_secret
+        # return the OTP secret stored as a Rails encrypted attribute if it
+        # exists. Otherwise return OTP secret stored by the `attr_encrypted` gem
+        return self[:otp_secret] if self[:otp_secret]
+
+        legacy_otp_secret
+      end
+
+      ##
+      # Decrypt and return the `encrypted_otp_secret` attribute which was used in
+      # prior versions of devise-two-factor
+      # See: # https://github.com/tinfoil/devise-two-factor/blob/main/UPGRADING.md
+      def legacy_otp_secret
+        nil
+      end
+
       def self.required_fields(klass)
-        [:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep]
+        [:otp_secret, :consumed_timestep]
       end
 
       # This defaults to the model's otp_secret
@@ -87,10 +90,20 @@ module Devise
       module ClassMethods
         Devise::Models.config(self, :otp_secret_length,
                                     :otp_allowed_drift,
+                                    :otp_encrypted_attribute_options,
                                     :otp_secret_encryption_key)
 
         def generate_otp_secret(otp_secret_length = self.otp_secret_length)
           ROTP::Base32.random_base32(otp_secret_length)
+        end
+
+        # Return value will be splatted with ** so return a version of the
+        # encrypted attribute options which is always a Hash.
+        # @return [Hash]
+        def splattable_encrypted_attr_options
+          return {} if otp_encrypted_attribute_options.nil?
+
+          otp_encrypted_attribute_options
         end
       end
     end
