@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = 'engineers@tinfoilsecurity.com'
   s.homepage    = 'https://github.com/tinfoil/devise-two-factor'
   s.description = 'Barebones two-factor authentication with Devise'
-  s.authors     = ['Shane Wilton']
+  s.authors     = ['Quinn Wilton']
 
   s.cert_chain  = [
                     'certs/tinfoil-cacert.pem',
