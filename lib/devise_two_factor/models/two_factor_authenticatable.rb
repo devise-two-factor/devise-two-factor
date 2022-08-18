@@ -37,7 +37,7 @@ module Devise
         otp_secret = options[:otp_secret] || self.otp_secret
         return false unless code.present? && otp_secret.present?
 
-        totp = otp(otp_secret)
+        totp = otp(otp_secret, options)
 
         if self.consumed_timestep
           # reconstruct the timestamp of the last consumed timestep
@@ -51,8 +51,8 @@ module Devise
         false
       end
 
-      def otp(otp_secret = self.otp_secret)
-        ROTP::TOTP.new(otp_secret)
+      def otp(otp_secret = self.otp_secret, options = {})
+        ROTP::TOTP.new(otp_secret, options)
       end
 
       def current_otp
