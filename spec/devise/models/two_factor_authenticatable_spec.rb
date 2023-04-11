@@ -64,15 +64,15 @@ describe ::Devise::Models::TwoFactorAuthenticatable do
 
     describe 'otp_secret options' do
       it 'should be of the key' do
-        expect(subject.encrypted_attributes[:otp_secret][:key]).to eq('test-key'*8)
+        expect(subject.attr_encrypted_encrypted_attributes[:otp_secret][:key]).to eq('test-key'*8)
       end
 
       it 'should be of the mode' do
-        expect(subject.encrypted_attributes[:otp_secret][:mode]).to eq(:per_attribute_iv_and_salt)
+        expect(subject.attr_encrypted_encrypted_attributes[:otp_secret][:mode]).to eq(:per_attribute_iv_and_salt)
       end
 
       it 'should be of the mode' do
-        expect(subject.encrypted_attributes[:otp_secret][:algorithm]).to eq('aes-256-cbc')
+        expect(subject.attr_encrypted_encrypted_attributes[:otp_secret][:algorithm]).to eq('aes-256-cbc')
       end
     end
   end
