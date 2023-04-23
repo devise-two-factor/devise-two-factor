@@ -64,15 +64,31 @@ describe ::Devise::Models::TwoFactorAuthenticatable do
 
     describe 'otp_secret options' do
       it 'should be of the key' do
-        expect(subject.encrypted_attributes[:otp_secret][:key]).to eq('test-key'*8)
+        if attr_encrypted_is_rails_seven_compatible?
+          expect(subject.attr_encrypted_encrypted_attributes[:otp_secret][:key]).to eq('test-key'*8)
+        else
+          expect(subject.encrypted_attributes[:otp_secret][:key]).to eq('test-key'*8)
+        end
       end
 
       it 'should be of the mode' do
-        expect(subject.encrypted_attributes[:otp_secret][:mode]).to eq(:per_attribute_iv_and_salt)
+        if attr_encrypted_is_rails_seven_compatible?
+          expect(subject.attr_encrypted_encrypted_attributes[:otp_secret][:mode]).to eq(:per_attribute_iv_and_salt)
+        else
+          expect(subject.encrypted_attributes[:otp_secret][:mode]).to eq(:per_attribute_iv_and_salt)
+        end
       end
 
       it 'should be of the mode' do
-        expect(subject.encrypted_attributes[:otp_secret][:algorithm]).to eq('aes-256-cbc')
+        if attr_encrypted_is_rails_seven_compatible?
+          expect(subject.attr_encrypted_encrypted_attributes[:otp_secret][:algorithm]).to eq('aes-256-cbc')
+        else
+          expect(subject.encrypted_attributes[:otp_secret][:algorithm]).to eq('aes-256-cbc')
+        end
+      end
+
+      def attr_encrypted_is_rails_seven_compatible?
+        Gem::Version.new(AttrEncrypted::Version.string) >= Gem::Version.new('4.0.0')
       end
     end
   end
