@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_runtime_dependency 'railties',       '< 7.1'
-  s.add_runtime_dependency 'activesupport',  '< 7.1'
+  s.add_runtime_dependency 'activesupport',  '= 5.1.7'
   s.add_runtime_dependency 'attr_encrypted', '>= 1.3', '< 4', '!= 2'
   s.add_runtime_dependency 'devise',         '~> 4.0'
   s.add_runtime_dependency 'rotp',           '~> 6.0'
