@@ -4,11 +4,11 @@ require 'active_model'
 class TwoFactorAuthenticatableDouble
   extend ::ActiveModel::Callbacks
   include ::ActiveModel::Validations::Callbacks
-  extend  ::Devise::Models
+  extend ::Devise::Models
 
-  # stub out the ::ActiveRecord::Encryption::EncryptableRecord API
+  # stub out the Lockbox API
   attr_accessor :otp_secret
-  def self.encrypts(*attrs)
+  def self.has_encrypted(*attrs)
     nil
   end
 
@@ -49,5 +49,3 @@ describe ::Devise::Models::TwoFactorAuthenticatable do
     end
   end
 end
-
-

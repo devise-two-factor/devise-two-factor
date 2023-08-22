@@ -1,4 +1,5 @@
 require 'rotp'
+require 'lockbox'
 
 module Devise
   module Models
@@ -7,24 +8,8 @@ module Devise
       include Devise::Models::DatabaseAuthenticatable
 
       included do
-        encrypts :otp_secret, **splattable_encrypted_attr_options
+        has_encrypted :otp_secret, **splattable_encrypted_attr_options
         attr_accessor :otp_attempt
-      end
-
-      def otp_secret
-        # return the OTP secret stored as a Rails encrypted attribute if it
-        # exists. Otherwise return OTP secret stored by the `attr_encrypted` gem
-        return self[:otp_secret] if self[:otp_secret]
-
-        legacy_otp_secret
-      end
-
-      ##
-      # Decrypt and return the `encrypted_otp_secret` attribute which was used in
-      # prior versions of devise-two-factor
-      # See: # https://github.com/tinfoil/devise-two-factor/blob/main/UPGRADING.md
-      def legacy_otp_secret
-        nil
       end
 
       def self.required_fields(klass)
