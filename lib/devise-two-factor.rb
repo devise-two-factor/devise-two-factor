@@ -31,7 +31,7 @@ module Devise
 end
 
 Devise.add_module(:two_factor_authenticatable, :route => :session, :strategy => true,
-                  :controller => :sessions, :model  => true)
+                  :controller => :sessions, :model  => true, :insert_at => 0)
 
 Devise.add_module(:two_factor_backupable, :route => :session, :strategy => true,
                   :controller => :sessions, :model  => true)
