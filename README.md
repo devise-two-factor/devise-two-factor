@@ -27,15 +27,32 @@ Devise-Two-Factor doesn't require much to get started, but there are two prerequ
 
 First, you'll need a Rails application setup with Devise. Visit the Devise [homepage](https://github.com/plataformatec/devise) for instructions.
 
-Devise-Two-Factor uses [ActiveRecord encrypted attributes](https://edgeguides.rubyonrails.org/active_record_encryption.html) which in turn uses Rails' encrypted credentials. [The Rails encrypted attributes guide](https://edgeguides.rubyonrails.org/active_record_encryption.html) has full details of how to set these up but briefly:
+
+Devise-Two-Factor uses [ActiveRecord encrypted attributes](https://edgeguides.rubyonrails.org/active_record_encryption.html). If you haven't already set up ActiveRecord encryption you must generate a key set and configure your application to use them either with Rails' encrypted credentials or from another source such as environment variables.
 
 ```bash
-# generate suitable encryption secrets to stdout
-$ ./bin/rails db:encryption:init
+# Generates a random key set and outputs it to stdout
+./bin/rails db:encryption:init
+```
 
-# Add the output from the command above to your encrypted credentials file via
-# Setting the EDITOR environment variable is optional, without it, your default editor will open
-$ EDITOR=code ./bin/rails credentials:edit
+You can load the key set using Rails' credentials.
+
+```bash
+# Copy the generated key set into your encrypted credentials file
+# Setting the EDITOR environment variable is optional, but without it your default editor will open
+EDITOR="code --wait" ./bin/rails credentials:edit
+```
+
+To learn more about credentials run `./bin/rails credentials:help`.
+
+Alternatively, you can configure your application with environment variables rather than Rails' credentials.
+
+```ruby
+# Copy the generate key set and set them as environment variables
+
+config.active_record.encryption.primary_key = ENV['ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY']
+config.active_record.encryption.deterministic_key = ENV['ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY']
+config.active_record.encryption.key_derivation_salt = ENV['ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT']
 ```
 
 Add Devise-Two-Factor to your Gemfile with:
