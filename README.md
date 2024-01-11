@@ -240,22 +240,6 @@ devise :two_factor_backupable, otp_backup_code_length:     32,
                                otp_number_of_backup_codes: 10
 ```
 
-### Help! I'm not using Rails 4.0!
-Don't worry! `TwoFactorBackupable` stores the backup codes as an array of strings in the database. In Rails 4.0 this is supported natively, but in earlier versions you can use a gem to emulate this behavior: we recommend [activerecord-postgres-array](https://github.com/tlconnor/activerecord-postgres-array).
-
-You'll then simply have to create a migration to add an array named `otp_backup_codes` to your model. If you use the above gem, this migration might look like:
-
-```ruby
-class AddTwoFactorBackupCodesToUsers < ActiveRecord::Migration
-  def change
-    # Change type from :string_array to :text_array if using MySQL database
-    add_column :users, :otp_backup_codes, :string_array
-  end
-end
-```
-
-Now just continue with the setup in the previous section, skipping the generator step.
-
 ## Testing
 
 Devise-Two-Factor includes shared-examples for both `TwoFactorAuthenticatable` and `TwoFactorBackupable`. Adding the following two lines to the specs for your two-factor enabled models will allow you to test your models for two-factor functionality:
