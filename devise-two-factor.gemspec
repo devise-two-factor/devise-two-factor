@@ -5,12 +5,11 @@ Gem::Specification.new do |s|
   s.name        = 'devise-two-factor'
   s.version     = DeviseTwoFactor::VERSION.dup
   s.platform    = Gem::Platform::RUBY
-  s.licenses    = ['MIT']
+  s.license     = 'MIT'
   s.summary     = 'Barebones two-factor authentication with Devise'
-  s.email       = 'engineers@tinfoilsecurity.com'
-  s.homepage    = 'https://github.com/tinfoil/devise-two-factor'
-  s.description = 'Barebones two-factor authentication with Devise'
-  s.authors     = ['Shane Wilton']
+  s.homepage    = 'https://github.com/devise-two-factor/devise-two-factor'
+  s.description = 'Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication through the TOTP scheme.'
+  s.authors     = ['Quinn Wilton']
 
   s.cert_chain  = [
                     'certs/tinfoil-cacert.pem',
