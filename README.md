@@ -1,7 +1,6 @@
 # Devise-Two-Factor Authentication
-By [Tinfoil Security](https://www.tinfoilsecurity.com/) (acq. [Synopsys](https://www.synopsys.com/) 2020). Interested in [working with us](https://www.synopsys.com/careers.html)? We're hiring!
 
-![Build Status](https://github.com/tinfoil/devise-two-factor/actions/workflows/ci.yml/badge.svg)
+![Build Status](https://github.com/devise-two-factor/devise-two-factor/actions/workflows/ci.yml/badge.svg)
 
 Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication, through the [TOTP](https://en.wikipedia.org/wiki/Time-based_One-Time_Password) scheme. It:
 
