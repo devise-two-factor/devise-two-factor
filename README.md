@@ -198,13 +198,15 @@ Rails.application.config.filter_parameters += [:otp_attempt]
 
 ### Preventing Brute-Force Attacks
 
-See [GHSA-chcr-x7hc-8fp8](https://github.com/devise-two-factor/devise-two-factor/security/advisories/GHSA-chcr-x7hc-8fp8)
-
 With any authentication solution it is also important to protect your users from brute-force attacks. For Devise-Two-Factor specifically if a user's username and password have already been compromised an attacker would be able to try possible TOTP codes and see if they can hit a lucky collision to log in. While Devise-Two-Factor is open-ended by design and cannot solve this for all applications natively there are some possible mitigations to consider. A non-exhaustive list follows:
 
 1. Use the `lockable` strategy from Devise to lock a user after a certain number of failed login attempts. See https://www.rubydoc.info/github/heartcombo/devise/main/Devise/Models/Lockable for more information.
 2. Configure a rate limit for your application, especially on the endpoints used to log in. One such library to accomplish this is [rack-attack](https://rubygems.org/gems/rack-attack).
 3. When displaying authentication errors hide whether validating a username/password combination failed or a two-factor code failed behind a more generic error message.
+
+#### Acknowledgements
+
+Thank you to Christian Reitter (Radically Open Security) and Chris MacNaughton (Centauri Solutions) for reporting the issue.
 
 ## Backup Codes
 
