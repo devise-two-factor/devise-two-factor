@@ -9,7 +9,7 @@
 - Rails 7 is now required.
 
 
-## 4.0.2
+## 4.1.0
 - Add Rails 7.0 support
 - Renew signing certificate
 - Use `after` option of TOTP#verify for additional timestamp verification
