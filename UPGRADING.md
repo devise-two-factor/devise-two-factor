@@ -87,7 +87,7 @@ This gem must be upgraded **as part of a Rails 7 upgrade**. See [the official Ra
         cipher_text = raw_cipher_text[0..-17]
         auth_tag =  raw_cipher_text[-16..-1]
 
-        # this alrorithm lifted from
+        # this algorithm lifted from
         # https://github.com/attr-encrypted/encryptor/blob/master/lib/encryptor.rb#L54
 
         # create an OpenSSL object which will decrypt the AES cipher with 256 bit
@@ -101,7 +101,7 @@ This gem must be upgraded **as part of a Rails 7 upgrade**. See [the official Ra
         cipher.decrypt
 
         # Use a Password-Based Key Derivation Function to generate the key actually
-        # used for encryptoin from the key we got as input.
+        # used for encryption from the key we got as input.
         cipher.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(key, salt, hmac_iterations, cipher.key_len)
 
         # set the Initialization Vector (IV)
