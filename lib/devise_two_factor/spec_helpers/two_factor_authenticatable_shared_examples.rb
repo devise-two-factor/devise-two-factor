@@ -8,7 +8,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
   describe 'required_fields' do
     it 'has the fields for otp_backup_codes' do
-      expect(Devise::Models::TwoFactorBackupable.required_fields(subject.class)).to contain_exactly(:otp_secret, :consumed_timestep)
+      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:otp_secret, :consumed_timestep)
     end
   end
 
