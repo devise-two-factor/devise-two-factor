@@ -9,7 +9,7 @@ module Devise
         # We check the OTP, then defer to DatabaseAuthenticatable
         super if validate(resource) { validate_otp(resource) }
 
-        raise(Devise.paranoid ? :invalid : :not_found_in_database) unless resource
+        fail(Devise.paranoid ? :invalid : :not_found_in_database) unless resource
 
         # We want to cascade to the next strategy if this one fails,
         # but database authenticatable automatically halts on a bad password
