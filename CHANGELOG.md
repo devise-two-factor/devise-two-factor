@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+## 5.0.0
+
+**Breaking Changes**
+- attr_encrypted has been deprecated in favor of native Rails attribute encryption. See [UPGRADING.md](UPGRADING.md) for details on how to migrate your records. You **must** use or build a migration strategy (see examples in [UPGRADING.md](UPGRADING.md)) to use existing data!
+- Rails 7 is now required.
+
+
+## 4.0.2
+- Add Rails 7.0 support
+- Renew signing certificate
+- Use `after` option of TOTP#verify for additional timestamp verification
+
+## 4.0.1
+- Convert CI from Travis CI to Github Actions ([#198](https://github.com/tinfoil/devise-two-factor/pull/198))
+- Fix ActiveSupport::Testing::TimeHelpers require in shared examples ([#191](https://github.com/tinfoil/devise-two-factor/pull/191))
+- Accept whitespace in provided codes ([#195](https://github.com/tinfoil/devise-two-factor/pull/195))
+- Add Truffleruby head to CI ([#200](https://github.com/tinfoil/devise-two-factor/pull/200))
+
+## 4.0.0
+- [breaking] Drop support for Ruby <= 2.2
+- Update ROTP
+- Add Rails 6.1 support
+- Remove timecop dependency
+- Clarify changes in project ownership
+- Bugfixes & cleanup
+
+## 3.1.0
+- Add Rails 6.0 support
+- New gem signing certificate
+- Fix paranoid-mode being ignored
+
+## 3.0.3
+- Add Rails 5.2 support
+
 ## 3.0.2
 - Add Rails 5.1 support
 

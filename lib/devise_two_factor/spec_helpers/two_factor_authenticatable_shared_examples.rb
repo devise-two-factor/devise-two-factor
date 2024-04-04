@@ -1,3 +1,5 @@
+require 'cgi'
+
 RSpec.shared_examples 'two_factor_authenticatable' do
   before :each do
     subject.otp_secret = subject.class.generate_otp_secret
@@ -6,7 +8,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
   describe 'required_fields' do
     it 'should have the attr_encrypted fields for otp_secret' do
-      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:encrypted_otp_secret, :encrypted_otp_secret_iv, :encrypted_otp_secret_salt, :consumed_timestep)
+      expect(Devise::Models::TwoFactorAuthenticatable.required_fields(subject.class)).to contain_exactly(:otp_secret, :consumed_timestep)
     end
   end
 
@@ -14,30 +16,18 @@ RSpec.shared_examples 'two_factor_authenticatable' do
     it 'should be of the configured length' do
       expect(subject.otp_secret.length).to eq(subject.class.otp_secret_length)
     end
-
-    it 'stores the encrypted otp_secret' do
-      expect(subject.encrypted_otp_secret).to_not be_nil
-    end
-
-    it 'stores an iv for otp_secret' do
-      expect(subject.encrypted_otp_secret_iv).to_not be_nil
-    end
-
-    it 'stores a salt for otp_secret' do
-      expect(subject.encrypted_otp_secret_salt).to_not be_nil
-    end
   end
 
   describe '#validate_and_consume_otp!' do
     let(:otp_secret) { '2z6hxkdwi3uvrnpn' }
 
     before :each do
-      Timecop.freeze(Time.current)
+      travel_to(Time.now)
       subject.otp_secret = otp_secret
     end
 
     after :each do
-      Timecop.return
+      travel_back
     end
 
     context 'with a stored consumed_timestep' do
@@ -64,11 +54,52 @@ RSpec.shared_examples 'two_factor_authenticatable' do
           expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
         end
       end
+
+      context 'given a valid OTP used multiple times within the allowed drift' do
+        let(:consumed_otp) { ROTP::TOTP.new(otp_secret).at(Time.now) }
+
+        before do
+          subject.validate_and_consume_otp!(consumed_otp)
+        end
+
+        context 'after the otp interval' do
+          before do
+            travel_to(subject.otp.interval.seconds.from_now)
+          end
+
+          it 'fails to validate' do
+            expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
+          end
+        end
+      end
+
+      context 'given a valid OTP used multiple times within the allowed drift after a subsequent login' do
+        let(:consumed_otp) { ROTP::TOTP.new(otp_secret).at(Time.now - subject.class.otp_allowed_drift) }
+
+        before do
+          travel_to(subject.class.otp_allowed_drift.seconds.ago)
+          subject.validate_and_consume_otp!(consumed_otp)
+        end
+
+        context 'after the otp interval' do
+          it 'fails to validate' do
+            travel_to(subject.class.otp_allowed_drift.seconds.from_now)
+            next_otp = ROTP::TOTP.new(otp_secret).at(Time.now)
+            expect(subject.validate_and_consume_otp!(next_otp)).to be true
+            expect(subject.validate_and_consume_otp!(consumed_otp)).to be false
+          end
+        end
+      end
     end
 
     it 'validates a precisely correct OTP' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now)
       expect(subject.validate_and_consume_otp!(otp)).to be true
+    end
+
+    it 'validates a precisely correct OTP with whitespace' do
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now)
+      expect(subject.validate_and_consume_otp!(otp.split("").join(" "))).to be true
     end
 
     it 'fails a nil OTP value' do
@@ -78,7 +109,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
     it 'validates an OTP within the allowed drift' do
       otp = ROTP::TOTP.new(otp_secret).at(Time.now + subject.class.otp_allowed_drift)
-      expect(subject.validate_and_consume_otp!(otp)).to be false
+      expect(subject.validate_and_consume_otp!(otp)).to be true
     end
 
     it 'does not validate an OTP above the allowed drift' do
@@ -95,15 +126,15 @@ RSpec.shared_examples 'two_factor_authenticatable' do
   describe '#otp_provisioning_uri' do
     let(:otp_secret_length) { subject.class.otp_secret_length }
     let(:account)           { Faker::Internet.email }
-    let(:issuer)            { "Tinfoil" }
+    let(:issuer)            { 'Tinfoil' }
 
-    it "should return uri with specified account" do
-      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{CGI.escape account}\?secret=\w{#{otp_secret_length}}})
+    it 'should return uri with specified account' do
+      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{CGI.escape(account)}\?secret=\w{#{otp_secret_length}}})
     end
 
-    it 'should return uri with issuer option', :aggregate_failures do
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).
-        to match(%r{otpauth://totp/#{CGI.escape issuer}:#{CGI.escape account}\?.*secret=\w{#{otp_secret_length}}(&|$)})
+    it 'should return uri with issuer option' do
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{CGI.escape(account)}\?.*secret=\w{#{otp_secret_length}}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{CGI.escape(account)}\?.*issuer=#{issuer}(&|$)})
     end
   end
 end

@@ -3,8 +3,6 @@ require 'rails/generators'
 module DeviseTwoFactor
   module Generators
     class DeviseTwoFactorGenerator < Rails::Generators::NamedBase
-      argument :encryption_key_env, :type => :string, :required => true
-
       desc 'Creates a migration to add the required attributes to NAME, and ' \
            'adds the necessary Devise directives to the model'
 
@@ -19,9 +17,7 @@ module DeviseTwoFactor
       def create_devise_two_factor_migration
         migration_arguments = [
                                 "add_devise_two_factor_to_#{plural_name}",
-                                "encrypted_otp_secret:string",
-                                "encrypted_otp_secret_iv:string",
-                                "encrypted_otp_secret_salt:string",
+                                "otp_secret:string",
                                 "consumed_timestep:integer",
                                 "otp_required_for_login:boolean"
                               ]
@@ -51,8 +47,7 @@ module DeviseTwoFactor
         indent_depth = class_path.size
 
         content = [
-                    "devise :two_factor_authenticatable,",
-                    "       :otp_secret_encryption_key => ENV['#{encryption_key_env}']\n"
+                    "devise :two_factor_authenticatable"
                   ]
 
         content << "attr_accessible :otp_attempt\n" if needs_attr_accessible?

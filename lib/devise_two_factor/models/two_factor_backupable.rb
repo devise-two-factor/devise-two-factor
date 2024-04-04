@@ -30,7 +30,7 @@ module Devise
       end
 
       # Returns true and invalidates the given code
-      # iff that code is a valid backup code.
+      # if that code is a valid backup code.
       def invalidate_otp_backup_code!(code)
         codes = self.otp_backup_codes || []
 

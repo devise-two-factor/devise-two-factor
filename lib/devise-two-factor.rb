@@ -12,9 +12,13 @@ module Devise
   mattr_accessor :otp_allowed_drift
   @@otp_allowed_drift = 30
 
-  # The key used to encrypt OTP secrets in the database
+  # The key used to encrypt OTP secrets in the database in legacy installs.
   mattr_accessor :otp_secret_encryption_key
   @@otp_secret_encryption_key = nil
+
+  # These options are passed to the Rails 7+ encrypted attribute
+  mattr_accessor :otp_encrypted_attribute_options
+  @@otp_encrypted_attribute_options = {}
 
   # The length of all generated OTP backup codes
   mattr_accessor :otp_backup_code_length
@@ -27,7 +31,7 @@ module Devise
 end
 
 Devise.add_module(:two_factor_authenticatable, :route => :session, :strategy => true,
-                  :controller => :sessions, :model  => true)
+                  :controller => :sessions, :model  => true, :insert_at => 0)
 
 Devise.add_module(:two_factor_backupable, :route => :session, :strategy => true,
                   :controller => :sessions, :model  => true)

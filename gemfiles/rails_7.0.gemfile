@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-gem "railties", "~> 5.2"
-gem "activesupport", "~> 5.2"
+gem "railties", "~> 7.0.0"
+gem "activesupport", "~> 7.0.0"
 
 gemspec path: "../"
