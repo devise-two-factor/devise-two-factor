@@ -125,7 +125,7 @@ RSpec.shared_examples 'two_factor_authenticatable' do
 
   describe '#otp_provisioning_uri' do
     let(:otp_secret_length) { subject.class.otp_secret_length }
-    let(:account)           { Faker::Internet.email }
+    let(:account)           { 'user@host.example' }
     let(:issuer)            { 'Tinfoil' }
 
     it 'should return uri with specified account' do
