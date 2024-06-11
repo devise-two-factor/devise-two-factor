@@ -235,6 +235,23 @@ class AddDeviseTwoFactorBackupableToUsers < ActiveRecord::Migration
 end
 ```
 
+If you're using Rails >= 6.1 with MySQL, you can handle backup codes as follows:
+
+```ruby
+# migration
+class AddDeviseTwoFactorBackupableToUsers < ActiveRecord::Migration
+  def change
+    add_column :users, :otp_backup_codes, :text
+  end
+end
+
+# model
+class User < ApplicationRecord
+  devise :two_factor_backupable
+  serialize :otp_backup_codes, Array
+end
+```
+
 You can then generate backup codes for a user:
 
 ```ruby
