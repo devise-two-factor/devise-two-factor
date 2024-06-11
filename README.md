@@ -224,16 +224,38 @@ You'll also be required to enable the `:two_factor_backupable` strategy, by addi
 manager.default_strategies(:scope => :user).unshift :two_factor_backupable
 ```
 
-The final installation step is dependent on your version of Rails. If you're not running Rails 4, skip to the next section. Otherwise, create the following migration:
+### Migration
+
+The final installation step may be dependent on your version of Rails.
+
+#### PostgreSQL
 
 ```ruby
 class AddDeviseTwoFactorBackupableToUsers < ActiveRecord::Migration
   def change
-    # Change type from :string to :text if using MySQL database
     add_column :users, :otp_backup_codes, :string, array: true
   end
 end
 ```
+
+#### MySQL
+
+```ruby
+# migration
+class AddDeviseTwoFactorBackupableToUsers < ActiveRecord::Migration
+  def change
+    add_column :users, :otp_backup_codes, :text
+  end
+end
+
+# model
+class User < ApplicationRecord
+  devise :two_factor_backupable
+  serialize :otp_backup_codes, Array
+end
+```
+
+### Generation
 
 You can then generate backup codes for a user:
 
