@@ -18,7 +18,6 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'rspec'
-require 'faker'
 require 'devise-two-factor'
 require 'devise_two_factor/spec_helpers'
 

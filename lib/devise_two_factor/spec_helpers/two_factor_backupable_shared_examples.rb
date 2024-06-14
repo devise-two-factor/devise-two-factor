@@ -34,7 +34,7 @@ RSpec.shared_examples 'two_factor_backupable' do
     end
 
     context 'with existing recovery codes' do
-      let(:old_codes)        { Faker::Lorem.words }
+      let(:old_codes)        { ['adam', 'betty', 'charles'] }
       let(:old_codes_hashed) { old_codes.map { |x| Devise::Encryptor.digest(subject.class, x) } }
 
       before do
