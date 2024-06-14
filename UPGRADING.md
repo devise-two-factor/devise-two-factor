@@ -59,7 +59,7 @@ This gem must be upgraded **as part of a Rails 7 upgrade**. See [the official Ra
     ```
 1. Add a `legacy_otp_secret` method to your user model e.g. `User`.
   * This method is used by the gem to find and decode the OTP secret from the legacy database columns.
-  * The implementation shown below works if you set up devise-two-factor with the settings suggested in the [README](./README.md).
+  * The implementation shown below works if you set up devise-two-factor with the settings suggested in the [OLD README](https://github.com/devise-two-factor/devise-two-factor/blob/8d74f5ee45594bf00e60d5d49eb6fcde82c2d2ba/README.md).
   * If you have customised the encryption scheme used to store the OTP secret then you will need to update this method to match.
   * If you are unsure, you should try the method below as is, and if you can still sign in users with OTP enabled then all is well.
     ```ruby
