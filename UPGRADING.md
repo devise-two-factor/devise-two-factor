@@ -190,7 +190,7 @@ This "clean up" phase can happen at the same time as your initial deployment but
       end
     end
     ```
-4. Remove `otp_secret_encryption_key` from the model setup. This also assumes you successfully ran the rake task in step 1.
+1. Remove `otp_secret_encryption_key` from the model setup. This also assumes you successfully ran the rake task in step 1.
     ```ruby
     # from this:
     devise :two_factor_authenticatable,
