@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 5.1.0
+
+- Remove faker dev dependency
+- Insert two_factor_authenticatable at the top of the devise module list
+- README and CI improvements
+
 ## 5.0.0
 
 **Breaking Changes**
