@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 4.1.0 / 4.1.1
+- Add support for attr_encrypted v4
+
 ## 4.0.2
 - Add Rails 7.0 support
 - Renew signing certificate
