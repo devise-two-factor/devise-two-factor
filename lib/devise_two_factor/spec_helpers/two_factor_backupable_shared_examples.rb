@@ -46,6 +46,39 @@ RSpec.shared_examples 'two_factor_backupable' do
         expect((subject.otp_backup_codes & old_codes_hashed)).to match []
       end
     end
+
+    context 'with numerical recovery codes' do
+      before do
+        subject.class.otp_backup_code_length = 6
+        @plaintext_codes = subject.generate_otp_backup_codes!(numerical: true)
+      end
+
+      it 'generates the correct number of new recovery codes' do
+        expect(subject.otp_backup_codes.length).to eq(subject.class.otp_number_of_backup_codes)
+      end
+
+      it 'generates recovery codes of the correct length' do
+        @plaintext_codes.each do |code|
+          expect(code.to_s.length).to eq(subject.class.otp_backup_code_length)
+        end
+      end
+
+      it 'generates distinct recovery codes' do
+        expect(@plaintext_codes.uniq).to contain_exactly(*@plaintext_codes)
+      end
+
+      it 'stores the codes as BCrypt hashes' do
+        subject.otp_backup_codes.each do |code|
+          expect(code).to match(/\A\$[0-9a-z]{2}\$[0-9]{2}\$[A-Za-z0-9\.\/]{53}\z/)
+        end
+      end
+
+      it 'does not generate alphabetical characters' do
+        @plaintext_codes.each do |code|
+          expect(code).to match(/\A\d{#{subject.class.otp_backup_code_length}}\z/)
+        end
+      end
+    end
   end
 
   describe '#invalidate_otp_backup_code!' do
