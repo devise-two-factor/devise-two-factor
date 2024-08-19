@@ -39,6 +39,7 @@ module Devise
 
           codes.delete(backup_code)
           self.otp_backup_codes = codes
+          self.save(validate: false) # prevent backup code re-use
           return true
         end
 
