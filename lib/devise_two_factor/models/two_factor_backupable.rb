@@ -39,6 +39,7 @@ module Devise
 
           codes.delete(backup_code)
           self.otp_backup_codes = codes
+          save!(validate: false)
           return true
         end
 

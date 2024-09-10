@@ -81,7 +81,8 @@ module Devise
       def consume_otp!
         if self.consumed_timestep != current_otp_timestep
           self.consumed_timestep = current_otp_timestep
-          return save(validate: false)
+          save!(validate: false)
+          return true
         end
 
         false

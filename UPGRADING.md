@@ -2,6 +2,10 @@
 
 ## Upgrading from 5.x to 6.x
 
+### save!
+
+`consume_otp!` and `invalidate_otp_backup_code!` now call `save!` instead of `save` (or nothing at all in the case of `invalide_otp_backup_code!`). If you manually called `save`/`save!` after calling `invalidate_otp_backup_code` you may be able to remove it.
+
 ### Secret Lengths
 
 The `otp_secret_length` and `otp_backup_code_length` options have changed to be the number of random bytes that are generated.
