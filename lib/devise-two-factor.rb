@@ -3,9 +3,10 @@ require 'devise_two_factor/models'
 require 'devise_two_factor/strategies'
 
 module Devise
-  # The length of generated OTP secrets
+  # The length of randomly generated OTP shared secret (in bytes).
+  # The secrets will be base32-encoded and have a length 1.6 times the configured value.
   mattr_accessor :otp_secret_length
-  @@otp_secret_length = 24
+  @@otp_secret_length = 20
 
   # The number of seconds before and after the current
   # time for which codes will be accepted
@@ -20,7 +21,8 @@ module Devise
   mattr_accessor :otp_encrypted_attribute_options
   @@otp_encrypted_attribute_options = {}
 
-  # The length of all generated OTP backup codes
+  # The length of randomly generated OTP backup codes (in bytes).
+  # The codes will be hex-encoded and have a length twice the configured value.
   mattr_accessor :otp_backup_code_length
   @@otp_backup_code_length = 16
 

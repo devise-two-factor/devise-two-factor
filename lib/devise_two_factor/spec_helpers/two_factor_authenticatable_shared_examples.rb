@@ -13,8 +13,8 @@ RSpec.shared_examples 'two_factor_authenticatable' do
   end
 
   describe '#otp_secret' do
-    it 'should be of the configured length' do
-      expect(subject.otp_secret.length).to eq(subject.class.otp_secret_length)
+    it 'should be of the expected length' do
+      expect(subject.otp_secret.length).to eq(subject.class.otp_secret_length*8/5)
     end
   end
 
@@ -129,11 +129,11 @@ RSpec.shared_examples 'two_factor_authenticatable' do
     let(:issuer)            { 'Tinfoil' }
 
     it 'should return uri with specified account' do
-      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{CGI.escape(account)}\?secret=\w{#{otp_secret_length}}})
+      expect(subject.otp_provisioning_uri(account)).to match(%r{otpauth://totp/#{CGI.escape(account)}\?secret=\w{#{otp_secret_length*8/5}}})
     end
 
     it 'should return uri with issuer option' do
-      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{CGI.escape(account)}\?.*secret=\w{#{otp_secret_length}}(&|$)})
+      expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{CGI.escape(account)}\?.*secret=\w{#{otp_secret_length*8/5}}(&|$)})
       expect(subject.otp_provisioning_uri(account, issuer: issuer)).to match(%r{otpauth://totp/#{issuer}:#{CGI.escape(account)}\?.*issuer=#{issuer}(&|$)})
     end
   end
