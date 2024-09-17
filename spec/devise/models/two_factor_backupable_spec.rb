@@ -17,6 +17,10 @@ class TwoFactorBackupableDouble
   devise :two_factor_authenticatable, :two_factor_backupable
 
   attr_accessor :otp_backup_codes
+
+  def save!(_)
+    true
+  end
 end
 
 describe ::Devise::Models::TwoFactorBackupable do

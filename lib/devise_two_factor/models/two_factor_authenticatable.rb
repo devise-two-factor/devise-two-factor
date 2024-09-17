@@ -81,7 +81,8 @@ module Devise
       def consume_otp!
         if self.consumed_timestep != current_otp_timestep
           self.consumed_timestep = current_otp_timestep
-          return save(validate: false)
+          save!(validate: false)
+          return true
         end
 
         false
@@ -93,8 +94,9 @@ module Devise
                                     :otp_encrypted_attribute_options,
                                     :otp_secret_encryption_key)
 
+        # Geneartes an OTP secret of the specified length, returning it after Base32 encoding.
         def generate_otp_secret(otp_secret_length = self.otp_secret_length)
-          ROTP::Base32.random_base32(otp_secret_length)
+          ROTP::Base32.random(otp_secret_length)
         end
 
         # Return value will be splatted with ** so return a version of the

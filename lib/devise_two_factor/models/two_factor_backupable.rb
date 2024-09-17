@@ -20,7 +20,7 @@ module Devise
         code_length     = self.class.otp_backup_code_length
 
         number_of_codes.times do
-          codes << SecureRandom.hex(code_length / 2) # Hexstring has length 2*n
+          codes << SecureRandom.hex(code_length)
         end
 
         hashed_codes = codes.map { |code| Devise::Encryptor.digest(self.class, code) }
@@ -39,6 +39,7 @@ module Devise
 
           codes.delete(backup_code)
           self.otp_backup_codes = codes
+          save!(validate: false)
           return true
         end
 

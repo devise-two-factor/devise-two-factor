@@ -17,7 +17,7 @@ RSpec.shared_examples 'two_factor_backupable' do
 
       it 'generates recovery codes of the correct length' do
         @plaintext_codes.each do |code|
-          expect(code.length).to eq(subject.class.otp_backup_code_length)
+          expect(code.length).to eq(subject.class.otp_backup_code_length*2)
         end
       end
 

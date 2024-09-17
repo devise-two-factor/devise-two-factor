@@ -15,9 +15,7 @@ We welcome pull requests, bug reports, and other contributions. We're especially
 
 ## Example App
 
-An example Rails 4 application is provided in the `demo` directory. It showcases a minimal example of Devise-Two-Factor in action, and can act as a reference for integrating the gem into your own application.
-
-For the demo app to work, create an encryption key and store it as an environment variable. One way to do this is to create a file named `local_env.yml` in the application root. Set the value of `ENCRYPTION_KEY` in the YML file. That value will be loaded into the application environment by `application.rb`.
+See [examples](demo/README.md).
 
 ## Getting Started
 
