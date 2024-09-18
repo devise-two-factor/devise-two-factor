@@ -4,7 +4,7 @@
 
 ### save!
 
-`consume_otp!` and `invalidate_otp_backup_code!` now call `save!` instead of `save` (or nothing at all in the case of `invalide_otp_backup_code!`). If you manually called `save`/`save!` after calling `invalidate_otp_backup_code` you may be able to remove it.
+`consume_otp!` and `invalidate_otp_backup_code!` now call `save!` instead of `save` (or nothing at all in the case of `invalidate_otp_backup_code!`). If you manually called `save`/`save!` after calling `invalidate_otp_backup_code!` you may be able to remove it.
 
 ### Secret Lengths
 
