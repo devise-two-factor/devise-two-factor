@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 6.0.0
+
+**Breaking Changes**
+- `otp_secret_length` and `otp_backup_code_length` options have changed to be the number of random bytes that are generated. See [UPGRADING.md](UPGRADING.md).
+- `consume_otp!` and `invalidate_otp_backup_code!` now call `save!` instead of `save`. See [UPGRADING.md](UPGRADING.md).
+
 ## 5.1.0
 
 - Remove faker dev dependency
