@@ -46,8 +46,8 @@ To learn more about credentials run `./bin/rails credentials:help`.
 Alternatively, you can configure your application with environment variables rather than Rails' credentials.
 
 ```ruby
-# Copy the generate key set and set them as environment variables. Make sure to specify the hash digest class first.
-config.active_record.encryption.hash_digest_class = OpenSSL::Digest::SHA256
+# Copy the generate key set and set them as environment variables. Make sure to specify the hash digest class first. This should be the hash digest class you currently use (for instance `OpenSSL::Digest::SHA256`).
+config.active_record.encryption.hash_digest_class = OpenSSL::Digest::<YOUR_HASH_DIGEST_CLASS>
 config.active_record.encryption.primary_key = ENV['ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY']
 config.active_record.encryption.deterministic_key = ENV['ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY']
 config.active_record.encryption.key_derivation_salt = ENV['ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT']
