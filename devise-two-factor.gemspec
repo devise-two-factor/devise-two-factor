@@ -11,11 +11,6 @@ Gem::Specification.new do |s|
   s.description = 'Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication through the TOTP scheme.'
   s.authors     = ['Quinn Wilton']
 
-  s.cert_chain  = [
-                    'certs/tinfoil-cacert.pem',
-                    'certs/tinfoilsecurity-gems-cert.pem'
-                  ]
-  s.signing_key = File.expand_path("~/.ssh/tinfoilsecurity-gems-key.pem") if $0 =~ /gem\z/
   s.files         = `git ls-files`.split("\n").delete_if { |x| x.match('demo/*') }
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']
