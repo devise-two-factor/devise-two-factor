@@ -155,10 +155,7 @@ At Tinfoil Security, we opted to use the excellent [rqrcode-rails3](https://gith
 If you decide to do this you'll need to generate a URI to act as the source for the QR code. This can be done using the `User#otp_provisioning_uri` method.
 
 ```ruby
-issuer = 'Your App'
-label = "#{issuer}:#{current_user.email}"
-
-current_user.otp_provisioning_uri(label, issuer: issuer)
+current_user.otp_provisioning_uri(current_user.email, issuer: 'Your App')
 
 # > "otpauth://totp/Your%20App:user@example.com?secret=[otp_secret]&issuer=Your+App"
 ```
