@@ -82,7 +82,7 @@ This generator will:
 
 1. Edit `app/models/MODEL.rb` (where MODEL is your model name):
     * add the `:two_factor_authenticatable` devise module
-    * remove the `:database_authenticatable` if present because it is incompatible with `:two_factor_authenticatable`
+    * remove the `:database_authenticatable` devise module, if present; having both modules enabled will lead to issues described below.
 1. Add a Warden config block to your Devise initializer, which enables the strategies required for two-factor authentication.
 
 Remember to apply the new migration after you run the generator:
@@ -107,9 +107,9 @@ Next you need to whitelist `:otp_attempt` as a permitted parameter in Devise `:s
   end
 ```
 
-Finally you should verify that `:database_authenticatable` is **not** being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail.
+Finally you should verify that `:database_authenticatable` is **not** being loaded by your model. The generator will try to remove it, but if you have a non-standard Devise setup, this step may fail. `:two_factor_authenticatable` includes all of `:database_authenticatable`'s functionality; it will still allow login without two-factor authentication until you enable it on your model's records with `otp_required_for_login`.
 
-**Loading both `:database_authenticatable` and `:two_factor_authenticatable` in a model is a security issue** It will allow users to bypass two-factor authenticatable due to the way Warden handles cascading strategies!
+**Loading both `:database_authenticatable` and `:two_factor_authenticatable` in a model is a security issue.** It will allow users to bypass two-factor authentication regardless of how `otp_required_for_login` is set due to the way Warden handles cascading strategies!
 
 ## Designing Your Workflow
 
