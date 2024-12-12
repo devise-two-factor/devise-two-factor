@@ -16,7 +16,7 @@ module Devise
         @halted = false if @result == :failure
       end
 
-      def validate_backup_code
+      def validate_backup_code(resource)
         return if params[scope].nil? || params[scope]['otp_attempt'].nil?
         resource.invalidate_otp_backup_code!(params[scope]['otp_attempt'])
       end
