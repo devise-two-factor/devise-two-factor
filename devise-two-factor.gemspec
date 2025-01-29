@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = 'Barebones two-factor authentication with Devise'
   s.authors     = ['Shane Wilton']
 
-  s.metadata['allowed_push_host'] = 'https://rubygems.bonusly.dev/private'
+  s.metadata['allowed_push_host'] = 'https://rubygems.pkg.github.com/bonusly'
   s.files         = `git ls-files`.split("\n").delete_if { |x| x.match('demo/*') }
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']

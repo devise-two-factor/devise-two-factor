@@ -1,0 +1,43 @@
+name: Release Ruby Gem to GitHub Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Check out the repository code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up Ruby environment
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2' # Adjust to your project's Ruby version
+        bundler-cache: true
+
+    # Authenticate with GitHub Packages
+    - name: Authenticate with GitHub Packages
+      env:
+        GEM_HOST_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        mkdir -p ~/.gem
+        echo "---" > ~/.gem/credentials
+        echo ":github: Bearer $GEM_HOST_API_KEY" >> ~/.gem/credentials
+        chmod 0600 ~/.gem/credentials
+
+    # Build the gem
+    - name: Build the gem
+      run: gem build devise-two-factor.gemspec
+
+    # Push the gem to GitHub Packages
+    - name: Publish the gem
+      env:
+        GEM_HOST_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+      run: gem push --key github --host https://rubygems.pkg.github.com/bonusly devise-two-factor-*.gem
