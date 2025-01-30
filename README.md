@@ -6,12 +6,9 @@ The original gem had a dependency on ActiveRecord. This fork makes it compatible
 
 ## Publishing
 
-To publish to Github Packages (our private gem server):
-1. Change the version of the gem in `/lib/devise_two_factor/version.rb`.
-2. Run `bundle install` to update the version in the gemspec and Gemfile files.
-3. Tag the commit you want to publish (from the master branch) with the new version. You can run something like `git tag v1.0.4` and push to Github.
-4. Github actions will publish the new version of the gem for you. The publish step is kicked off by the push with a version tag.
-5. Now you can have the applications which use this gem run bundle update to get the new version.
+This is a public repo, so we don't need to publish the gem in order to pull the changes into an application. Add this line to your Gemfile to get this gem: `gem "devise-two-factor", github: "bonusly/devise-two-factor"`
+
+When you have changes that you want to pull into an app (i.e. something you would publish as a new version), you can just run `bundle update devise-two-factor` in the repo.
 
 # Original README Below
 
