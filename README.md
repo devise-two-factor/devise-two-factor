@@ -213,11 +213,20 @@ To install it, you need to add the `:two_factor_backupable` directive to your mo
 devise :two_factor_backupable
 ```
 
-You'll also be required to enable the `:two_factor_backupable` strategy, by adding the following line to your Warden config in your Devise initializer, substituting :user for the name of your Devise scope.
+You'll also be required to enable the `:two_factor_backupable` strategy, by making the following change to your Warden config in your Devise initializer, substituting `:user` for the name of your Devise scope.
 
 ```ruby
-manager.default_strategies(:scope => :user).unshift :two_factor_backupable
+# config/initializers/devise.rb
+
+Devise.setup do |config|
+  config.warden do |manager|
+    manager.default_strategies(scope: :user).unshift :two_factor_backupable       # add this line
+    manager.default_strategies(scope: :user).unshift :two_factor_authenticatable  # keep existing line 
+  end
+  ...
 ```
+
+**Note:** The order of these lines is very important. You only want to check backup codes if the OTP code is invalid. Depending on your BCrypt stretch settings, the necessary calls to the hashing engine (to check each code) can add ~2 seconds to the login request.
 
 ### Migration
 
