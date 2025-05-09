@@ -49,38 +49,91 @@ RSpec.shared_examples 'two_factor_backupable' do
   end
 
   describe '#invalidate_otp_backup_code!' do
-    before do
-      @plaintext_codes = subject.generate_otp_backup_codes!
-    end
 
-    context 'given an invalid recovery code' do
-      it 'returns false' do
-        expect(subject.invalidate_otp_backup_code!('password')).to be false
-      end
-    end
 
-    context 'given a valid recovery code' do
-      it 'returns true' do
-        @plaintext_codes.each do |code|
-          expect(subject.invalidate_otp_backup_code!(code)).to be true
+  describe "#invalidate_otp_backup_code!" do
+      context "with no backup codes" do
+        it "does nothing" do
+          expect(subject.invalidate_otp_backup_code!("foo")).to be false
         end
       end
 
-      it 'invalidates that recovery code' do
-        code = @plaintext_codes.sample
+      context "with an array of backup codes, newly generated" do
+        before do
+          @plaintext_codes = subject.generate_otp_backup_codes!
+        end
 
-        subject.invalidate_otp_backup_code!(code)
-        expect(subject.invalidate_otp_backup_code!(code)).to be false
+        context 'given an invalid recovery code' do
+          it 'returns false' do
+            expect(subject.invalidate_otp_backup_code!('password')).to be false
+          end
+        end
+
+        context 'given a valid recovery code' do
+          it 'returns true' do
+            @plaintext_codes.each do |code|
+              expect(subject.invalidate_otp_backup_code!(code)).to be true
+            end
+          end
+
+          it 'invalidates that recovery code' do
+            code = @plaintext_codes.sample
+
+            subject.invalidate_otp_backup_code!(code)
+            expect(subject.invalidate_otp_backup_code!(code)).to be false
+          end
+
+          it 'does not invalidate the other recovery codes' do
+            code = @plaintext_codes.sample
+            subject.invalidate_otp_backup_code!(code)
+
+            @plaintext_codes.delete(code)
+
+            @plaintext_codes.each do |code|
+              expect(subject.invalidate_otp_backup_code!(code)).to be true
+            end
+          end
+        end
       end
 
-      it 'does not invalidate the other recovery codes' do
-        code = @plaintext_codes.sample
-        subject.invalidate_otp_backup_code!(code)
+      context "with backup codes as a string" do
+        before do
+          # Simulates database adapters that don't understand `t.string :otp_backup_codes, type: array` properly
+          # such as SQL Server; and have just returned the serialized string still.
+          @plaintext_codes = subject.generate_otp_backup_codes!
+          subject.otp_backup_codes = @plaintext_codes.to_json
+        end
 
-        @plaintext_codes.delete(code)
+        context 'given an invalid recovery code' do
+          it 'returns false' do
+            expect(subject.invalidate_otp_backup_code!('password')).to be false
+          end
+        end
 
-        @plaintext_codes.each do |code|
-          expect(subject.invalidate_otp_backup_code!(code)).to be true
+        context 'given a valid recovery code' do
+          it 'returns true' do
+            @plaintext_codes.each do |code|
+              expect(subject.invalidate_otp_backup_code!(code)).to be true
+            end
+          end
+
+          it 'invalidates that recovery code' do
+            code = @plaintext_codes.sample
+
+            subject.invalidate_otp_backup_code!(code)
+            expect(subject.invalidate_otp_backup_code!(code)).to be false
+          end
+
+          it 'does not invalidate the other recovery codes' do
+            code = @plaintext_codes.sample
+            subject.invalidate_otp_backup_code!(code)
+
+            @plaintext_codes.delete(code)
+
+            @plaintext_codes.each do |code|
+              expect(subject.invalidate_otp_backup_code!(code)).to be true
+            end
+          end
         end
       end
     end
