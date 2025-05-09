@@ -34,6 +34,15 @@ module Devise
       def invalidate_otp_backup_code!(code)
         codes = self.otp_backup_codes || []
 
+        # Cooerce from serialized string to array; should the database not support array serialization properly.
+        codes = JSON.parse(codes) if codes.is_a?(String)
+
+        # Should we still have some other kind of non iterable result, terminate.
+        unless codes.is_a?(Array)
+          # TODO: Is there a reliable Rails.logger.warn or Kernel.warn that can be safely logged here?
+          return false
+        end
+
         codes.each do |backup_code|
           next unless Devise::Encryptor.compare(self.class, backup_code, code)
 

@@ -98,10 +98,11 @@ RSpec.shared_examples 'two_factor_backupable' do
 
       context "with backup codes as a string" do
         before do
+          @plaintext_codes = subject.generate_otp_backup_codes!
+
           # Simulates database adapters that don't understand `t.string :otp_backup_codes, type: array` properly
           # such as SQL Server; and have just returned the serialized string still.
-          @plaintext_codes = subject.generate_otp_backup_codes!
-          subject.otp_backup_codes = @plaintext_codes.to_json
+          subject.otp_backup_codes = subject.otp_backup_codes.to_json
         end
 
         context 'given an invalid recovery code' do
