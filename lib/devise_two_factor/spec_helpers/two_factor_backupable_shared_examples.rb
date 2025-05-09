@@ -106,6 +106,10 @@ RSpec.shared_examples 'two_factor_backupable' do
           # `serialize :otp_backup_codes, Array` in their model
           subject.otp_backup_codes = subject.otp_backup_codes.to_json
         end
+
+        it "raises a meaningful error" do
+          expect { subject.invalidate_otp_backup_code!("flork") }.to raise_error(TypeError)
+        end
       end
     end
   end
