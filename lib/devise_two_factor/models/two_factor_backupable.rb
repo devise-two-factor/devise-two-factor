@@ -35,7 +35,11 @@ module Devise
         codes = self.otp_backup_codes || []
 
         # Cooerce from serialized string to array; should the database not support array serialization properly.
-        codes = JSON.parse(codes) if codes.is_a?(String)
+        if codes.is_a?(String)
+          # TODO: Is there a reliable Rails.logger.warn or similar that can point out the database serialization is not
+          #       as expected.
+          codes = JSON.parse(codes)
+        end
 
         # Should we still have some other kind of non iterable result, terminate.
         unless codes.is_a?(Array)
