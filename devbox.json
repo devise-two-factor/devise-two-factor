@@ -1,0 +1,27 @@
+{
+  "$schema":  "https://raw.githubusercontent.com/jetify-com/devbox/0.14.2/.schema/devbox.schema.json",
+  "packages": {
+    "gnumake"                                   : "latest",
+    "pkg-config"                                : "latest",
+    "ruby"                                      : "3.2.2",
+    "libyaml": {
+      "version"                                 : "latest",
+      "outputs"                                 : ["out", "dev"]
+    },
+    "libsodium": {
+      "version"                                 : "latest",
+      "outputs"                                 : ["out", "dev"]
+    },
+    "libffi": {
+      "version"                                 : "latest",
+      "outputs"                                 : ["out", "dev"]
+    }
+  },
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null"
+    ],
+    "scripts": {
+    }
+  }
+}
