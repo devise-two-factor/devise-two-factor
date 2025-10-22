@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 6.2.0
+
+- Rails 8.1 support
+
 ## 6.1.0
 
 - Rails 8 support
