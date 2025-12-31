@@ -233,7 +233,7 @@ class AddDeviseTwoFactorBackupableToUsers < ActiveRecord::Migration
 end
 ```
 
-#### MySQL
+#### MySQL, SQL Server, other databases without an array string type
 
 ```ruby
 # migration
