@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 6.3.0
+
+- Fixed timing to be consistent when Devise paranoid mode is active.
+
 ## 6.2.0
 
 - Rails 8.1 support
