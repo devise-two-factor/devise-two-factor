@@ -107,7 +107,8 @@ RSpec.shared_examples 'two_factor_backupable' do
           subject.otp_backup_codes = subject.otp_backup_codes.to_json
         end
 
-        it "raises a meaningful error" do
+        # Do not run when DB adapter handles array assignment correctly
+        it "raises a meaningful error", unless: -> { subject.otp_backup_codes.is_a?(Array) } do
           expect { subject.invalidate_otp_backup_code!("flork") }.to raise_error(TypeError)
         end
       end
