@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']
 
-  s.add_runtime_dependency 'railties',       '>= 7.0', '< 8.2'
-  s.add_runtime_dependency 'activesupport',  '>= 7.0', '< 8.2'
+  s.add_runtime_dependency 'railties',       '>= 7.2', '< 8.2'
+  s.add_runtime_dependency 'activesupport',  '>= 7.2', '< 8.2'
   s.add_runtime_dependency 'devise',         '>= 4.0', '< 5.0'
   s.add_runtime_dependency 'rotp',           '~> 6.0'
 

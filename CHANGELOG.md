@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Drop support for EOL Rails versions 7.0 and 7.1
+
 ## 6.3.0
 
 - Fixed timing to be consistent when Devise paranoid mode is active.
