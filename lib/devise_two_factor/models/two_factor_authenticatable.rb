@@ -91,7 +91,7 @@ module Devise
                                     :otp_encrypted_attribute_options,
                                     :otp_secret_encryption_key)
 
-        # Geneartes an OTP secret of the specified length, returning it after Base32 encoding.
+        # Generates an OTP secret of the specified length, returning it after Base32 encoding.
         def generate_otp_secret(otp_secret_length = self.otp_secret_length)
           ROTP::Base32.random(otp_secret_length)
         end
