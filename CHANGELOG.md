@@ -2,12 +2,14 @@
 
 ## Unreleased
 
-- Drop support for EOL Rails versions 7.0 and 7.1
+## 6.4.0
+
 - Remove upper limit on Devise version (allows v5) from gemspec
 
 ## 6.3.1
 
 - Fix DB-adapter-specific integration issue with backupable shared example
+- Drop support for EOL Rails versions 7.0 and 7.1
 
 ## 6.3.0
 
