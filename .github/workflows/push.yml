@@ -23,5 +23,8 @@ jobs:
         with:
           ruby-version: ruby
 
+      - name: Install dependencies
+        run: bundle install
+
       # Release
       - uses: rubygems/release-gem@v1
