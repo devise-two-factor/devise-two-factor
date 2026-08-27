@@ -54,4 +54,43 @@ describe ::Devise::Models::TwoFactorAuthenticatable do
   end
 end
 
+describe ::Devise::Models::TwoFactorAuthenticatable do
+  context 'When validate_and_consume_otp! is called with explicit drift options' do
+    subject { TwoFactorAuthenticatableDouble.new }
+    let(:otp_secret) { subject.class.generate_otp_secret }
+    let(:default_drift) { subject.class.otp_allowed_drift }
 
+    before :each do
+      travel_to(Time.now)
+      subject.otp_secret = otp_secret
+      subject.consumed_timestep = nil
+    end
+
+    after :each do
+      travel_back
+    end
+
+    it 'validates a future OTP outside the default drift when :drift_ahead is widened' do
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now + default_drift * 2)
+      expect(subject.validate_and_consume_otp!(otp, drift_ahead: default_drift * 2)).to be true
+    end
+
+    it 'does not validate a past OTP outside the default drift when only :drift_ahead is widened' do
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now - default_drift * 2)
+      expect(subject.validate_and_consume_otp!(otp, drift_ahead: default_drift * 2)).to be false
+    end
+
+    it 'widens both directions when given :allowed_drift' do
+      future_otp = ROTP::TOTP.new(otp_secret).at(Time.now + default_drift * 2)
+      expect(subject.validate_and_consume_otp!(future_otp, allowed_drift: default_drift * 2)).to be true
+    end
+
+    it 'prefers :drift_ahead over :allowed_drift when both are given' do
+      otp = ROTP::TOTP.new(otp_secret).at(Time.now + default_drift * 2)
+      result = subject.validate_and_consume_otp!(
+        otp, drift_ahead: default_drift, allowed_drift: default_drift * 2
+      )
+      expect(result).to be false
+    end
+  end
+end
