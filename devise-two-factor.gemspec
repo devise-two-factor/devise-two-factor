@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.summary     = 'Barebones two-factor authentication with Devise'
   s.homepage    = 'https://github.com/devise-two-factor/devise-two-factor'
+  s.metadata['source_code_uri'] = s.homepage
   s.description = 'Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication through the TOTP scheme.'
   s.authors     = ['Quinn Wilton']
 
