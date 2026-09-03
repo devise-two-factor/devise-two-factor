@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+# 6.4.1
+
+- Update gem spec metadata sourcecode URI
+
 ## 6.4.0
 
 - Remove upper limit on Devise version (allows v5) from gemspec
