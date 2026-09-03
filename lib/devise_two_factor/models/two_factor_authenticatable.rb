@@ -44,7 +44,10 @@ module Devise
           after_timestamp = self.consumed_timestep * totp.interval
         end
 
-        timestamp = totp.verify(code.gsub(/\s+/, ""), drift_behind: self.class.otp_allowed_drift, drift_ahead: self.class.otp_allowed_drift, after: after_timestamp)
+        otp_drift_behind = options[:drift_behind] || options[:allowed_drift] || self.class.otp_allowed_drift
+        otp_drift_ahead = options[:drift_ahead] || options[:allowed_drift] || self.class.otp_allowed_drift
+
+        timestamp = totp.verify(code.gsub(/\s+/, ""), drift_behind: otp_drift_behind, drift_ahead: otp_drift_ahead, after: after_timestamp)
         return consume_otp!(totp, timestamp) if timestamp
 
         false
