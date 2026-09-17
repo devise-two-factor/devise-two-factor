@@ -111,6 +111,8 @@ Finally you should verify that `:database_authenticatable` is **not** being load
 
 **Loading both `:database_authenticatable` and `:two_factor_authenticatable` in a model is a security issue.** It will allow users to bypass two-factor authentication regardless of how `otp_required_for_login` is set due to the way Warden handles cascading strategies!
 
+**Also verify that `config.params_authenticatable` in `config/initializers/devise.rb` is NOT set to `[:database]`. Logging in without 2FA enabled will fail if it is.**
+
 ## Designing Your Workflow
 
 Devise-Two-Factor only worries about the backend, leaving the details of the integration up to you. This means that you're responsible for building the UI that drives the gem. While there is an example Rails application included in the gem, it is important to remember that this gem is intentionally very open-ended, and you should build a user experience which fits your individual application.
