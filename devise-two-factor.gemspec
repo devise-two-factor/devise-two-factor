@@ -12,8 +12,7 @@ Gem::Specification.new do |s|
   s.description = 'Devise-Two-Factor is a minimalist extension to Devise which offers support for two-factor authentication through the TOTP scheme.'
   s.authors     = ['Quinn Wilton']
 
-  s.files         = `git ls-files`.split("\n").delete_if { |x| x.match('demo/*') }
-  s.test_files    = `git ls-files -- spec/*`.split("\n")
+  s.files         = `git ls-files lib CHANGELOG.md LICENSE README.md SECURITY.md`.split($/)
   s.require_paths = ['lib']
 
   s.add_runtime_dependency 'railties',       '>= 7.2', '< 8.2'
